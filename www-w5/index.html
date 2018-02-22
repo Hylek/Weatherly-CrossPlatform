@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>new app</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--SOME APPLE SEETINGS-->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!--You need this although you do not need a physical reference as build will inject it in-->
+<script type="text/javascript" src="cordova.ja"></script>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
+<link rel="stylesheet" href="css/custom.css" />
+
+</head>
+
+<!--notice i have added the class online which will change based on our online listeners-->
+<body class="online">
+
+
+<!--note this is outside of the page role so will never get removed and is always accessible-->
+<div id="offline" class="fixed">
+    <h2>You Are Offline</h2>
+    <p>Hurray!</p>
+</div>
+
+<!--end offline display-->
+
+<!--home-->
+<div data-role="page" id="home" data-theme="b">
+    <div data-role="header"> <a href="#menu" data-icon="bars" data-iconpos="notext" class="" data-theme="b" title="Menu">
+        <span class="ui-btn-inner"><span class="ui-btn-text">Menu</span><span class="ui-icon ui-icon-bars ui-icon-shadow">&nbsp;</span></span></a></div>
+    <div data-role="content">
+        <h3>Boom!</h3>
+        <p>This is my second app build... how easy is this! Snap!</p>
+    </div>
+</div>
+
+<!--home-->
+
+
+<!--graph-->
+<div data-role="page" id="graph" data-theme="b">
+        <div data-role="header"> <a href="#menu" data-icon="bars" data-icon="bars" data-iconpos="notext" class="" data-theme="b" title="Menu">
+            <span class="ui-btn-inner"><span class="ui-btn-text">Menu</span><span class="ui-icon ui-icon-bars ui-icon-shadow">&nbsp;</span></span></a></div>
+                <div data-role="content">
+                    <h3>Graphs</h3>
+                    
+                <div id="donut" class="graph"></div>
+                <div id="line" class="graph"></div>
+            </div>
+        </div>
+<!--graph-->
+
+
+<!--sound-->
+<div data-role="page" id="sound" data-theme="b">
+        <div data-role="header"> <a href="#menu" data-icon="bars" data-icon="bars" data-iconpos="notext" class="" data-theme="b" title="Menu">
+            <span class="ui-btn-inner"><span class="ui-btn-text">Menu</span><span class="ui-icon ui-icon-bars ui-icon-shadow">&nbsp;</span></span></a></div>
+                <div data-role="content">
+                    <h3>Sound</h3>
+                    <div class="graph"> <a id="soundbtn">Play</a></div>
+            </div>
+        </div>
+
+<!--sound-->
+
+
+<!--menu-->
+<div data-role="page" id="menu" data-theme="b">
+    <div data-role="header"> <a href="#menu" data-icon="bars" data-icon="bars" data-iconpos="notext" class="" data-theme="b" title="Menu">
+        <span class="ui-btn-inner"><span class="ui-btn-text">Menu</span><span class="ui-icon ui-icon-bars ui-icon-shadow">&nbsp;</span></span></a></div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true" class="ui-alt-icon" data-theme="b">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#graph">Graphs</a></li>
+                <li><a href="#sound">Sound</a></li>
+                <li><a href="#">Something Else</a></li>
+            </ul>
+        </div>
+    </a></div>
+</div>
+
+<!--menu-->
+
+
+<!--scripts at the bottom of the page-->
+
+<script src="js/jquery.min.js"></script>
+
+<!--note jqm defaults defines preferences for JQM so needs to be declared before the library-->
+<script src="js/jqm_defaults.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script> 
+
+
+<!--high charts stuff with custom theme-->
+<script src="js/highcharts.js"></script> 
+<script src="js/modules/no-data-to-display.js"></script> 
+<script src="js/themes/mypbtheme.js"></script>
+<!--high charts stuff-->
+ 
+<!--our js file goes last so we know all dependencies are loaded first--> 
+<script type="text/javascript" src="js/main.js"></script>
+
+</body>
+</html>
