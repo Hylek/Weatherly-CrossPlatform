@@ -3,15 +3,15 @@
     xmlns:gap   = "http://phonegap.com/ns/1.0"
     id          = "com.adigitalengagement.locationtracker"
     versionCode = "1"
-    version     = "1.0.2" >
+    version     = "1.0.1" >
     
     <!-- versionCode is optional and Android only -->
-    <name>CrossPlatApp</name>
+    <name>My CPD APP2</name>
     <description>
         this is my description app.
     </description> 
     <author href="website" email="your email">
-        Daniel Cumbor
+        Wayne Christian
     </author>
 	<!--
       This allows your app to load assets from all *.phongap.com domains
@@ -55,13 +55,19 @@
 	-->
 	
     <!-- Core plugins -->
-
+    <!--<plugin name="cordova-plugin-camera" />
+    <plugin name="cordova-plugin-media-capture" />-->
     <plugin name="cordova-plugin-console" />
     <plugin name="cordova-plugin-device" />
     <plugin name="cordova-plugin-device-orientation" />
+    <plugin name="cordova-plugin-dialogs" />
+	<plugin name="cordova-plugin-vibration" />
+    <!--<plugin name="cordova-plugin-geolocation" />-->
+    <plugin name="cordova-plugin-inappbrowser" />
+    <!--<plugin name="cordova-plugin-media" />-->
     <plugin name="cordova-plugin-network-information" />
-    
-
+    <!--<plugin name="cordova-plugin-splashscreen" />
+	<plugin name="phonegap-plugin-push" />-->
 	
     <!-- Third party plugins -->
     <!-- A list of available plugins are available at https://build.phonegap.com/plugins
@@ -70,7 +76,9 @@
 	<variable name="CAMERA_USAGE_DESCRIPTION" value="To scan barcodes" />
 	</plugin>
 -->
-
+<plugin name="phonegap-plugin-push" source="npm">
+    <param name="SENDER_ID" value="378250794931" />
+</plugin>
     <!-- Third party plugins -->
  
 
@@ -125,7 +133,7 @@
 <splash src="assets/splash/apple/iOS-Launch-Images_Default-Landscape-736h@3x.png" platform="ios" width="2208" height="1242" />-->
 
 <!-- iPad -->
-<splash src="assets/splash/apple/IOS-iPad-portrait.png" platform="ios" width="768" height="1024" />
+<splash src="assets/splash/apple/IOS-iPad-portrait" platform="ios" width="768" height="1024" />
 
 <!-- Retina iPad -->
 <splash src="assets/splash/apple/IOS-iPadAirMini-portrait@2x.png" platform="ios" width="1536" height="2048" />
@@ -150,7 +158,7 @@
     <access origin="*"/>
     <!-- Added the following intents to support the removal of whitelist code from base cordova to a plugin -->
     <!-- Whitelist configuration. Refer to https://cordova.apache.org/docs/en/edge/guide_appdev_whitelist_index.md.html -->
-    <plugin name="cordova-plugin-whitelist" />
+    <plugin name="cordova-plugin-whitelist" version="1" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
