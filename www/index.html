@@ -42,7 +42,8 @@
       </div>
 
       <div class ="owl-content">
-        <h1>Welcome my dudes</h1>
+        <h1>Permissions</h1>
+        <p class="owl-body">IN ORDER TO FUNCTION PROPERLY, THIS APP WILL USE YOUR COARSE LOCATION TO OBTAIN YOUR GENERAL AREA.</p>
         <div class="owl-footer">
           <h3>SWIPE TO CONTINUE</h3>
         </div>
@@ -57,22 +58,36 @@
       <div></div>
     </div>
 </div>
-
 <!--home-->
 
 <div data-role="page" id="locations" data-theme="a">
   <div data-role="content">
     <h1>Locations</h1>
           <div class="current-location">
-            <div class="location-name"></div>
+            <div class="location-name-small">
+
+            </div>
+            <div class="location-name-small">
+              
+            </div>
+            <div class="location-name-small">
+              
+            </div>
           </div>
+  </div>
+</div>
+
+<div data-role="page" id="addLocation" data-theme="a">
+  <div data-role="content">
+    Enter Location: <input type="text" id="locationSearch"> 
+    <button type="button" id="addLocationButton">Add Location</button> 
   </div>
 </div>
 
 <div data-role="page" id="currentLocation" data-theme="a">
             <div data-role="content">
                     <div class="location-name"></div>
-                    <div class="Today"><h4>TODAY</h4></div>
+                    <div class="today"><h4>TODAY</h4></div>
                     <div class="time-stamp"></div>
                     <div class="current-temp"></div>
                     <div class="feels-like"></div>

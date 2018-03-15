@@ -5,6 +5,8 @@ var audioElement;
 var currentWeather = "";
 var currentLocation = "";
 
+var input = "";
+
 // add device and doc ready
 
 function onDeviceReady()
@@ -25,6 +27,10 @@ function innit() {
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
+	// if(localStorage.get("firstTime") === 0)
+	// {
+	// 	window.location = 'index.html#locations';
+	// }
 	//localStorage.setItem("firstTime", 1);
 	$(".owl-carousel").owlCarousel({
 			items: 1
@@ -50,8 +56,8 @@ function innit() {
 // 	setting-name: setting-value
 // });
 // });
-
 }
+
 owl.on('changed.owl.carousel', function(event) {
 	if(event.page.index == 3)
 	{
@@ -63,28 +69,131 @@ owl.on('changed.owl.carousel', function(event) {
 
 $(document).on('pagecreate', '#locations', function()
 {
+	$(window).on("swipeup", function(event){
+			window.location = 'index.html#addLocation';
+	});
+});
 
+$(document).on('pagecreate', '#addLocation', function()
+{
+	console.log("In Add Location!");
+
+	$('#addLocationButton').on("click", function(event){ 
+		input = document.getElementById("locationSearch").value;
+		console.log("Input! " + input);
+		window.location = 'index.html#currentLocation';
+	});
 });
 
 $(document).on('pagecreate', '#currentLocation', function()
 {
-	var lat = 51.50;
-	var long = 0.12;
-	var result = "";
-
 	console.log("locations page loaded");
-	// Do GET request to API here!
-	$.get("https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=" + lat + "," + long, function(data){
-		console.log("Found something!");
-		// var stringed = JSON.stringify(data);
-		// console.log(stringed);
-		displayData(data);
+
+	$('.today').hide();
+
+	getWeather();
+
+	$(window).on("swiperight", function(event){
+		window.location = 'index.html#locations';
 	});
+
+	$(window).on("swipedown", function(event){
+		getWeather();
+	})
 });
+
+function getWeatherViaCity()
+{
+	$.ajax({
+		url: 'https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=' + input,
+		type: 'get',
+		async: 'true',
+		dataType: 'json',
+		beforeSend: function() {
+			$.mobile.loading('show');
+			$('.today').hide();
+			$('.location-name').hide();
+			$('.time-stamp').hide();
+			$('.current-temp').hide(); 
+			$('.current-cond').hide();
+			$('.feels-like').hide();
+			$('.today').hide();
+		},
+		complete: function(data) {
+			$.mobile.loading('hide');
+		},
+		success: function(result) {
+			$('.location-name').fadeIn('slow');
+			$('.time-stamp').fadeIn('slow');
+			$('.current-temp').fadeIn('slow');
+			$('.current-cond').fadeIn('slow');
+			$('.feels-like').fadeIn('slow');
+			$('.today').fadeIn('slow');
+			
+			displayData(result);
+		}	
+	});
+}
+
+function getWeather()
+{
+	var lat = 0;
+	var long = 0;
+
+	navigator.geolocation.getCurrentPosition(function(pos){
+		lat = pos.coords.latitude;
+		long = pos.coords.longitude;
+		console.log("COORDS " + lat + " " + long);
+
+		//  $.get("https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=" + lat + "," + long, function(data){
+		//  	console.log("Found something!");
+		// 	 displayData(data);
+		// 	 var stringed = JSON.stringify(data);
+		// 	 console.log("OLD VERSION " + stringed);
+		// });
+
+		$.ajax({
+			url: 'https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=' + lat + ',' + long,
+			type: 'get',
+			async: 'true',
+			dataType: 'json',
+			beforeSend: function() {
+				$.mobile.loading('show');
+				$('.today').hide();
+				$('.location-name').hide();
+				$('.time-stamp').hide();
+				$('.current-temp').hide();
+				$('.current-cond').hide();
+				$('.feels-like').hide();
+				$('.today').hide();
+			},
+			complete: function(data) {
+				$.mobile.loading('hide');
+			},
+			success: function(result) {
+				$('.location-name').fadeIn('slow');
+				$('.time-stamp').fadeIn('slow');
+				$('.current-temp').fadeIn('slow');
+				$('.current-cond').fadeIn('slow');
+				$('.feels-like').fadeIn('slow');
+				$('.today').fadeIn('slow');
+				
+				displayData(result);
+			}
+			// error: function(request, error) {
+
+			// }
+		// });
+
+
+		});
+	});
+}
 
 function displayData(data)
 {
 	$('.location-name').html(data.location.name);
+	$('.location-name-small').html(data.location.name);
 	$('.time-stamp').html("LAST UPDATED: " + data.current.last_updated);
 	$('.current-temp').html(data.current.temp_c + "C");
 	$('.current-cond').html(data.current.condition.text);
@@ -104,11 +213,6 @@ function onOnline()
 	$('body').addClass('online');
 	$('body').removeClass('offline');
 }
-
-
-
-
-
 
 $(document).on("pagebeforeshow", function () {
 	// When entering pagetwo
