@@ -57,6 +57,24 @@ display: block;
 	padding-left: 5px;
 }
 
+.location-name-small-1 {
+	font-size: 20px;
+	padding-top: 5vh;
+	padding-left: 5px;
+}
+
+.location-name-small-2 {
+	font-size: 20px;
+	padding-top: 5vh;
+	padding-left: 5px;
+}
+
+.location-name-small-3 {
+	font-size: 20px;
+	padding-top: 5vh;
+	padding-left: 5px;
+}
+
 .today {
 	padding-left: 10px;
 }

@@ -81,7 +81,7 @@ $(document).on('pagecreate', '#addLocation', function()
 	$('#addLocationButton').on("click", function(event){ 
 		input = document.getElementById("locationSearch").value;
 		console.log("Input! " + input);
-		window.location = 'index.html#currentLocation';
+		window.location = 'index.html#addedLocation';
 	});
 });
 
@@ -89,6 +89,12 @@ $(document).on('pagecreate', '#currentLocation', function()
 {
 	console.log("locations page loaded");
 
+	$('.today').hide();
+	$('.location-name').hide();
+	$('.time-stamp').hide();
+	$('.current-temp').hide(); 
+	$('.current-cond').hide();
+	$('.feels-like').hide();
 	$('.today').hide();
 
 	getWeather();
@@ -99,6 +105,36 @@ $(document).on('pagecreate', '#currentLocation', function()
 
 	$(window).on("swipedown", function(event){
 		getWeather();
+	})
+});
+
+$(document).on('pageload', '#addedLocation', function()
+{
+	$('.today').hide();
+	$('.location-name').hide();
+	$('.time-stamp').hide();
+	$('.current-temp').hide(); 
+	$('.current-cond').hide();
+	$('.feels-like').hide();
+	$('.today').hide();
+
+	console.log("Getting weather");
+	getWeatherViaCity();
+});
+
+$(document).on('pagecreate', '#addedLocation', function()
+{
+	console.log("added locations page loaded");
+
+
+	getWeatherViaCity();
+
+	$(window).on("swiperight", function(event){
+		window.location = 'index.html#locations';
+	});
+
+	$(window).on("swipedown", function(event){
+		getWeatherViaCity();
 	})
 });
 
@@ -123,6 +159,7 @@ function getWeatherViaCity()
 			$.mobile.loading('hide');
 		},
 		success: function(result) {
+			console.log("Got something!");
 			$('.location-name').fadeIn('slow');
 			$('.time-stamp').fadeIn('slow');
 			$('.current-temp').fadeIn('slow');
