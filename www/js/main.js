@@ -4,8 +4,11 @@ var audioElement;
 
 var currentWeather = "";
 var currentLocation = "";
-
 var input = "";
+var addedLocationsCount = 0;
+
+var locationArray = [];
+//var addedLocations[,] = "";
 
 // add device and doc ready
 
@@ -24,14 +27,24 @@ $(document).ready(function()
 var owl = $('.owl-carousel');
 
 function innit() {
+	//window.localStorage.clear();
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
-	// if(localStorage.get("firstTime") === 0)
-	// {
-	// 	window.location = 'index.html#locations';
-	// }
-	//localStorage.setItem("firstTime", 1);
+	addedLocationsCount = window.localStorage.getItem("locationCount");
+    
+	locationArray = JSON.parse(window.localStorage.getItem("locations"));
+	if(locationArray == null)
+	{
+		locationArray = [];
+	}
+
+	console.log(locationArray);
+
+	if(localStorage.getItem("firstTime") === 1)
+	{
+		window.location = 'index.html#locations';
+	}
 	$(".owl-carousel").owlCarousel({
 			items: 1
 	});
@@ -63,14 +76,33 @@ owl.on('changed.owl.carousel', function(event) {
 	{
 		console.log("Loading locations page!");
 		localStorage.setItem("firstTime", 1);
-		window.location = 'index.html#currentLocation';
+		window.location = 'index.html#locations';
 	}
 })
 
 $(document).on('pagecreate', '#locations', function()
 {
-	$(window).on("swipeup", function(event){
+	$(window).on("swipeleft", function(event){
 			window.location = 'index.html#addLocation';
+	});
+
+	$(window).on("swiperight", function(event){
+		window.location = 'index.html#currentLocation';
+	});
+
+	for(var i = 0; i < locationArray.length; i++)
+	{
+		$('#locationList').empty().append('<li><a href = "#addedLocation">' + locationArray[i] + '</a><a class="deleteMe"></a></li>').listview('refresh');
+	}
+
+	var listElements = [];
+	$("ul li").each(function() { listElements.push($(this).text()) });
+	console.log(listElements);
+
+	$('.deleteMe').on("click", function(event) {
+		console.log("Remove element!");
+		$(this).parent().remove();
+		$('#locationList').listview('refresh');
 	});
 });
 
@@ -79,9 +111,12 @@ $(document).on('pagecreate', '#addLocation', function()
 	console.log("In Add Location!");
 
 	$('#addLocationButton').on("click", function(event){ 
-		input = document.getElementById("locationSearch").value;
+		input = document.getElementById("locationSearch").value + " UK";
 		console.log("Input! " + input);
 		window.location = 'index.html#addedLocation';
+		window.localStorage.setItem("locationCount", addedLocationsCount);
+		locationArray.push(input);
+		getWeatherViaCity();
 	});
 });
 
@@ -99,39 +134,46 @@ $(document).on('pagecreate', '#currentLocation', function()
 
 	getWeather();
 
-	$(window).on("swiperight", function(event){
+	$(window).on("swipeleft", function(event){
 		window.location = 'index.html#locations';
 	});
 
-	$(window).on("swipedown", function(event){
-		getWeather();
-	})
+	// $(window).on("swiperight", function(event){
+	// 	getWeather();
+	// })
 });
 
-$(document).on('pageload', '#addedLocation', function()
-{
-	$('.today').hide();
-	$('.location-name').hide();
-	$('.time-stamp').hide();
-	$('.current-temp').hide(); 
-	$('.current-cond').hide();
-	$('.feels-like').hide();
-	$('.today').hide();
+// $(document).on('pagebeforeshow', '#addedLocation', function()
+// {
+// 	console.log("Getting weather");
 
-	console.log("Getting weather");
-	getWeatherViaCity();
-});
+// 	// $('.today').hide();
+// 	// $('.location-name').hide();
+// 	// $('.time-stamp').hide();
+// 	// $('.current-temp').hide(); 
+// 	// $('.current-cond').hide();
+// 	// $('.feels-like').hide();
+// 	// $('.today').hide();
+
+// 	// getWeatherViaCity();
+// });
 
 $(document).on('pagecreate', '#addedLocation', function()
 {
 	console.log("added locations page loaded");
 
-
-	getWeatherViaCity();
+	//getWeatherViaCity();
 
 	$(window).on("swiperight", function(event){
 		window.location = 'index.html#locations';
+
+		// for(var i = 0; i < locationArray.length; i++)
+		// {
+		// 	$('#locationList').append('<li><a href = "#addedLocation">' + locationArray[i] + '</a><a class="deleteMe"></a></li>').listview('refresh');
+		// }
 	});
+
+	console.log(locationArray);
 
 	$(window).on("swipedown", function(event){
 		getWeatherViaCity();
@@ -140,6 +182,8 @@ $(document).on('pagecreate', '#addedLocation', function()
 
 function getWeatherViaCity()
 {
+	console.log("Getting weather via city name");
+	console.log(input);
 	$.ajax({
 		url: 'https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=' + input,
 		type: 'get',
@@ -159,7 +203,11 @@ function getWeatherViaCity()
 			$.mobile.loading('hide');
 		},
 		success: function(result) {
-			console.log("Got something!");
+			console.log("Got something!", result);
+			//addedLocationsCount += 1;
+			//locationArray[addedLocationsCount] = input;
+			window.localStorage.setItem("locations", JSON.stringify(locationArray));
+			console.log(locationArray);
 			$('.location-name').fadeIn('slow');
 			$('.time-stamp').fadeIn('slow');
 			$('.current-temp').fadeIn('slow');
@@ -197,7 +245,7 @@ function getWeather()
 			beforeSend: function() {
 				$.mobile.loading('show');
 				$('.today').hide();
-				$('.location-name').hide();
+				$('.current-location-name').hide();
 				$('.time-stamp').hide();
 				$('.current-temp').hide();
 				$('.current-cond').hide();
@@ -208,14 +256,14 @@ function getWeather()
 				$.mobile.loading('hide');
 			},
 			success: function(result) {
-				$('.location-name').fadeIn('slow');
+				$('.current-location-name').fadeIn('slow');
 				$('.time-stamp').fadeIn('slow');
 				$('.current-temp').fadeIn('slow');
 				$('.current-cond').fadeIn('slow');
 				$('.feels-like').fadeIn('slow');
 				$('.today').fadeIn('slow');
 				
-				displayData(result);
+				displayCurrentWeatherData(result);
 			}
 			// error: function(request, error) {
 
@@ -225,6 +273,17 @@ function getWeather()
 
 		});
 	});
+}
+
+function displayCurrentWeatherData(data)
+{
+	$('.current-location-name').html(data.location.name);
+	$('.current-location-name-list').html(data.location.name);
+	$('.location-name-small').html(data.location.name);
+	$('.time-stamp').html("LAST UPDATED: " + data.current.last_updated);
+	$('.current-temp').html(data.current.temp_c + "C");
+	$('.current-cond').html(data.current.condition.text);
+	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
 }
 
 function displayData(data)

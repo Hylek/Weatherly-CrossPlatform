@@ -63,35 +63,34 @@
 <div data-role="page" id="locations" data-theme="a">
   <div data-role="content">
     <h1>Locations</h1>
-          <div class="current-location">
-            <div class="location-name-small-1">
-            
-            </div>
-            <div class="location-name-small-2">
-              
-            </div>
-            <div class="location-name-small-3">
-              
-            </div>
-          </div>
   </div>
+  <ul data-role="listview" id="locationList" data-split-icon="delete">
+    <li><a href="#currentLocation"><div class="current-location-name-list">Find Current Location</div></a><a class="deleteMe"></a></li>
+
+  </ul>
 </div>
 
 <div data-role="page" id="addLocation" data-theme="a">
   <div data-role="content">
     Enter Location: <input type="text" id="locationSearch"> 
+    <div class="button-buffer"></div>
     <button type="button" id="addLocationButton">Add Location</button> 
   </div>
 </div>
 
 <div data-role="page" id="currentLocation" data-theme="a">
             <div data-role="content">
-                    <div class="location-name"></div>
+                    <div class="current-location-name"></div>
                     <div class="today"><h4>TODAY</h4></div>
                     <div class="time-stamp"></div>
                     <div class="current-temp"></div>
                     <div class="feels-like"></div>
                     <div class="current-cond"></div>
+            </div>
+            <div class="community-feature">
+              <p>Is it currently raining here?</p>
+              <button type="button" id="rain-yes">Yes</button> 
+              <button type="button" id="rain-yes">No</button> 
             </div>
         </div>
 
