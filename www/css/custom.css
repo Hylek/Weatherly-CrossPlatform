@@ -205,6 +205,40 @@ display: block;
 	height: 100vh;
 }
 
+.list-buffer {
+	background: beige;
+	height: 10vh; 
+}
+
+.locations-list {
+	background: aquamarine;
+	height: calc(100vh - 20vh);
+}
+
+.loc-button {
+	background: coral;
+	width: 75%;
+	position: relative;
+	top: 50%;
+	left: 12%;
+	transform: translateY(-50%);
+	text-align: center;
+}
+
+.currentLocationItem {
+	background: cornflowerblue;
+	height: 10vh;
+	position: relative;
+}
+
+.page-title {
+	background: gray;
+	font-size: 32px;
+	padding-left: 10px;
+	font-family: mont-light;
+	height: 10vh;
+}
+
 .back-button {
 	background-color: white;
 	border-radius: 25px;

@@ -154,13 +154,14 @@ $(document).on('pagecreate', '#currentLocation', function()
 
 	getWeather();
 
-	$(window).on("swipeleft", function(event){
+	$('.refresh-button').on("click", function(event){
+		getWeather();
+	});
+
+	$('.back-button').on("click", function(event){
 		window.location = 'index.html#locations';
 	});
 
-	// $(window).on("swiperight", function(event){
-	// 	getWeather();
-	// })
 });
 
 // $(document).on('pagebeforeshow', '#addedLocation', function()
