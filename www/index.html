@@ -77,21 +77,42 @@
     <button type="button" id="addLocationButton">Add Location</button> 
   </div>
 </div>
-
-<div data-role="page" id="currentLocation" data-theme="a">
-            <div data-role="content">
-                    <div class="current-location-name"></div>
-                    <div class="today"><h4>TODAY</h4></div>
-                    <div class="time-stamp"></div>
-                    <div class="current-temp"></div>
-                    <div class="feels-like"></div>
-                    <div class="current-cond"></div>
+        <div data-role="page" id="currentLocation" data-theme="a">
+          <div class="section-1">
+            <div class="container-1">
+              <div class="current-location-name"></div>
+              <div class="refresh"><input type="image" src="img/refresh-icon.png" class="refresh-button" id="refresh-weather" /></div>
             </div>
-            <div class="community-feature">
-              <p>Is it currently raining here?</p>
-              <button type="button" id="rain-yes">Yes</button> 
-              <button type="button" id="rain-yes">No</button> 
+            <div class="container-2">
+              <div class="today">TODAY</div>
+              <div class="icon-buffer"></div>
+              <div class="weather-icon"></div>
+              <div class="current-temp"></div>
+              <div class="current-cond"></div>
             </div>
+            <div class="container-3">
+              <div class="container-3-buffer"></div>
+              <div class="weekly-container">
+                  <div class="tomorrow">TOMORROW</div>
+                  <div class="weekly-icon-tomorrow"></div>
+                  <div class="weekly-temp-tomorrow"></div>
+              </div>
+              <div class="weekly-container">
+                  <div class="day2">ERROR</div>
+                  <div class="weekly-icon-day2"></div>
+                  <div class="weekly-temp-day2"></div>
+              </div>
+              <div class="weekly-container">
+                  <div class="day3">ERROR</div>
+                  <div class="weekly-icon-day3"></div>
+                  <div class="weekly-temp-day3"></div>
+              </div>
+              <div class="footer">
+                <div class="time-stamp"></div>
+                <div class="back-button">BACK<a href="#"><span class="backspan"></span></a></div>
+              </div>
+            </div>
+          </div>
         </div>
 
 <div data-role="page" id="addedLocation" data-theme="a">

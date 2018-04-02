@@ -58,6 +58,26 @@ function innit() {
 		$('body').addClass('offline');
 	}
 
+	$('.today').hide();
+	$('.current-location-name').hide();
+	$('.time-stamp').hide();
+	$('.current-temp').hide();
+	$('.current-cond').hide();
+	$('.feels-like').hide();
+	$('.today').hide();
+	$('.weekly-temp-tomorrow').hide();
+	$('.weekly-icon-tomorrow').hide();
+	$('.tomorrow').hide();
+	$('.refresh').hide();
+	$('.weather-icon').hide();
+	$('.weekly-temp-day2').hide();
+	$('.weekly-temp-day3').hide();
+	$('.weekly-icon-day2').hide();
+	$('.weekly-icon-day3').hide();
+	$('.day2').hide();
+	$('.day3').hide();
+
+
 	// $(function(){
   // 	$('.bxslider').bxSlider({
   //   	mode: 'fade',
@@ -197,7 +217,6 @@ function getWeatherViaCity()
 			$('.current-temp').hide(); 
 			$('.current-cond').hide();
 			$('.feels-like').hide();
-			$('.today').hide();
 		},
 		complete: function(data) {
 			$.mobile.loading('hide');
@@ -262,9 +281,53 @@ function getWeather()
 				$('.current-cond').fadeIn('slow');
 				$('.feels-like').fadeIn('slow');
 				$('.today').fadeIn('slow');
+				$('.refresh').fadeIn('slow');
+				$('.weather-icon').fadeIn('slow');
+
 				
 				displayCurrentWeatherData(result);
 			}
+
+			
+			// error: function(request, error) {
+
+			// }
+		// });
+
+
+		});
+
+		$.ajax({
+			url: 'https://api.apixu.com/v1/forecast.json?key=b3818c2db71747f78d2185718181403&q=' + lat + ',' + long + '&days=4',
+			type: 'get',
+			async: 'true',
+			dataType: 'json',
+			beforeSend: function() {
+				$.mobile.loading('show');
+				console.log("GETTING FORECAST");
+				$('.weekly-temp-tomorrow').hide();
+				$('.tomorrow').hide();
+				$('.weekly-temp-day2').hide();
+				$('.weekly-temp-day3').hide();
+			},
+			complete: function(data) {
+				$.mobile.loading('hide');
+			},
+			success: function(result) {
+				displayForecastedWeatherData(result);
+				$('.weekly-temp-tomorrow').fadeIn('slow');
+				$('.tomorrow').fadeIn('slow');
+				$('.day2').fadeIn('slow');
+				$('.day3').fadeIn('slow');
+				$('.weekly-temp-day2').fadeIn('slow');
+				$('.weekly-temp-day3').fadeIn('slow');
+				$('.weekly-icon-tomorrow').fadeIn('slow');
+				$('.weekly-icon-day2').fadeIn('slow');
+				$('.weekly-icon-day3').fadeIn('slow');
+				$('.weather-icon').fadeIn('slow');
+			}
+
+			
 			// error: function(request, error) {
 
 			// }
@@ -273,6 +336,21 @@ function getWeather()
 
 		});
 	});
+}
+
+function displayForecastedWeatherData(data)
+{
+	var days = data.forecast.forecastday;
+	$('.weekly-temp-tomorrow').html(days[1].day.avgtemp_c + "C");
+	$('.weekly-temp-day2').html(days[2].day.avgtemp_c + "C");
+	$('.weekly-temp-day3').html(days[3].day.avgtemp_c + "C");
+	$('.day2').html(FigureOutDayOfWeek(data, 2));
+	$('.day3').html(FigureOutDayOfWeek(data, 3));
+	$('.weekly-icon-tomorrow').html(FigureOutIconType(data, 1));
+	$('.weekly-icon-day2').html(FigureOutIconType(data, 2));
+	$('.weekly-icon-day3').html(FigureOutIconType(data, 3));
+
+	console.log(days);
 }
 
 function displayCurrentWeatherData(data)
@@ -284,6 +362,7 @@ function displayCurrentWeatherData(data)
 	$('.current-temp').html(data.current.temp_c + "C");
 	$('.current-cond').html(data.current.condition.text);
 	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
+	$('.weather-icon').html(FigureOutIconType(data, 0));
 }
 
 function displayData(data)
@@ -296,6 +375,50 @@ function displayData(data)
 	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
 }
 
+function FigureOutDayOfWeek(data, day)
+{
+	var days = data.forecast.forecastday;
+	var weekDays = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+
+	var date = days[day].date
+	var formattedDate = date.replace("-", ",").replace("-", ",");
+	var newDate = new Date(formattedDate);
+	return weekDays[newDate.getDay()];
+}
+
+function FigureOutIconType(data, day)
+{
+	if(day != 0)
+	{
+		var days = data.forecast.forecastday;
+		var weather = days[day].day.condition.text;
+	
+		if(weather.includes("rain"))
+		{
+			return "S";
+		}
+		if(weather.includes("sunny"))
+		{
+			return "A";
+		}
+	}
+	else
+	{
+		var weather = data.current.condition.text;
+		if(weather.includes("rain"))
+		{
+			return "S";
+		}
+		if(weather.includes("sunny"))
+		{
+			return "A";
+		}
+		if(weather.includes("Partly") && weather.includes("cloudy") )
+		{
+			return "D";
+		}
+	}
+}
 
 // handle online and offline intermittent connectivity
 
