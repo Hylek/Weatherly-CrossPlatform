@@ -27,7 +27,6 @@ $(document).ready(function()
 var owl = $('.owl-carousel');
 
 function innit() {
-	//window.localStorage.clear();
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
@@ -76,6 +75,7 @@ function innit() {
 	$('.weekly-icon-day3').hide();
 	$('.day2').hide();
 	$('.day3').hide();
+	$('.back-button').hide();
 
 
 	// $(function(){
@@ -102,13 +102,11 @@ owl.on('changed.owl.carousel', function(event) {
 
 $(document).on('pagecreate', '#locations', function()
 {
-	$(window).on("swipeleft", function(event){
-			window.location = 'index.html#addLocation';
+	$('.add-button').on("click", function(event){
+		window.location = 'index.html#addLocation';
 	});
 
-	$(window).on("swiperight", function(event){
-		window.location = 'index.html#currentLocation';
-	});
+	getWeather();
 
 	for(var i = 0; i < locationArray.length; i++)
 	{
@@ -185,20 +183,7 @@ $(document).on('pagecreate', '#addedLocation', function()
 
 	//getWeatherViaCity();
 
-	$(window).on("swiperight", function(event){
-		window.location = 'index.html#locations';
-
-		// for(var i = 0; i < locationArray.length; i++)
-		// {
-		// 	$('#locationList').append('<li><a href = "#addedLocation">' + locationArray[i] + '</a><a class="deleteMe"></a></li>').listview('refresh');
-		// }
-	});
-
 	console.log(locationArray);
-
-	$(window).on("swipedown", function(event){
-		getWeatherViaCity();
-	})
 });
 
 function getWeatherViaCity()
@@ -276,6 +261,8 @@ function getWeather()
 				$.mobile.loading('hide');
 			},
 			success: function(result) {
+				displayCurrentWeatherData(result);
+				
 				$('.current-location-name').fadeIn('slow');
 				$('.time-stamp').fadeIn('slow');
 				$('.current-temp').fadeIn('slow');
@@ -284,9 +271,7 @@ function getWeather()
 				$('.today').fadeIn('slow');
 				$('.refresh').fadeIn('slow');
 				$('.weather-icon').fadeIn('slow');
-
-				
-				displayCurrentWeatherData(result);
+				$('.back-button').fadeIn('slow');
 			}
 
 			
@@ -357,6 +342,7 @@ function displayForecastedWeatherData(data)
 function displayCurrentWeatherData(data)
 {
 	$('.current-location-name').html(data.location.name);
+	$('.current-location-name-small').html(data.location.name);
 	$('.current-location-name-list').html(data.location.name);
 	$('.location-name-small').html(data.location.name);
 	$('.time-stamp').html("LAST UPDATED: " + data.current.last_updated);
@@ -394,7 +380,7 @@ function FigureOutIconType(data, day)
 		var days = data.forecast.forecastday;
 		var weather = days[day].day.condition.text;
 	
-		if(weather.includes("rain"))
+		if(weather.includes("rain") || weather.includes("drizzle"))
 		{
 			return "S";
 		}
@@ -406,7 +392,7 @@ function FigureOutIconType(data, day)
 	else
 	{
 		var weather = data.current.condition.text;
-		if(weather.includes("rain"))
+		if(weather.includes("rain") || weather.includes("drizzle"))
 		{
 			return "S";
 		}

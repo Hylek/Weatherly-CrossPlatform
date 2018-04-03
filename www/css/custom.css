@@ -144,6 +144,12 @@ display: block;
 	font-family: mont-light;
 }
 
+.current-location-name-small {
+	font-size: 24px;
+	padding-left: 10px;
+	font-family: mont-light;
+}
+
 .location-name-small {
 	font-size: 20px;
 	padding-top: 5vh;
@@ -212,7 +218,7 @@ display: block;
 
 .locations-list {
 	background: aquamarine;
-	height: calc(100vh - 20vh);
+	height: calc(100vh - 28vh);
 }
 
 .loc-button {
@@ -227,7 +233,7 @@ display: block;
 
 .currentLocationItem {
 	background: cornflowerblue;
-	height: 10vh;
+	height: 8vh;
 	position: relative;
 }
 
@@ -253,6 +259,23 @@ display: block;
 	font-family: mont-bold;
 	text-decoration: none;
 }
+
+.add-button {
+	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));;
+	border-radius: 25px;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+	cursor: pointer;
+	font-family: mont-bold;
+	text-decoration: none;
+}
+
+
 .refresh-button {
 	padding-top: 1vh;
 }
@@ -270,6 +293,14 @@ display: block;
 	position: fixed;
 	display: grid;
 	grid-template-columns: 75% 25%;
+	width: 100vw;
+}
+
+.location-footer {
+	bottom: 0;
+	position: fixed;
+	display: grid;
+	grid-template-columns: 25% 50% 25%;
 	width: 100vw;
 }
 
