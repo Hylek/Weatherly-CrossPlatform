@@ -235,6 +235,8 @@ display: block;
 	background: cornflowerblue;
 	height: 8vh;
 	position: relative;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .page-title {
@@ -251,7 +253,6 @@ display: block;
     color: black;
     padding: 7px 10px;
     text-align: center;
-    text-decoration: none;
     display: inline-block;
     font-size: 12px;
     margin: 4px 2px;

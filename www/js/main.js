@@ -102,8 +102,15 @@ owl.on('changed.owl.carousel', function(event) {
 
 $(document).on('pagecreate', '#locations', function()
 {
+	var newPage;
 	$('.add-button').on("click", function(event){
-		window.location = 'index.html#addLocation';
+		//window.location = 'index.html#addLocation';
+		
+		if($('#wew').length <= 0) {
+			newPage = $("<div data-role=page data-url=yay id=wew><div data-role=header><h1>YAY!!!!</h1></div><div data-role=content><img src=http://bukk.it/yay.gif /></div></div");
+			newPage.appendTo( $.mobile.pageContainer );
+		}
+		$.mobile.changePage( newPage );
 	});
 
 	getWeather();
