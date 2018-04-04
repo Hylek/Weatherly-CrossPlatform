@@ -2,6 +2,8 @@
 
 var audioElement;
 
+var state = 0;
+
 var currentWeather = "";
 var currentLocation = "";
 var input = "";
@@ -104,13 +106,18 @@ $(document).on('pagecreate', '#locations', function()
 {
 	var newPage;
 	$('.add-button').on("click", function(event){
-		//window.location = 'index.html#addLocation';
+		window.location = 'index.html#addLocation';
 		
-		if($('#wew').length <= 0) {
-			newPage = $("<div data-role=page data-url=yay id=wew><div data-role=header><h1>YAY!!!!</h1></div><div data-role=content><img src=http://bukk.it/yay.gif /></div></div");
-			newPage.appendTo( $.mobile.pageContainer );
-		}
-		$.mobile.changePage( newPage );
+		// if($('#wew').length <= 0) {
+		// 	newPage = $("<div data-role=page data-url=yay id=wew><div data-role=header><h1>YAY!!!!</h1></div><div data-role=content><img src=http://bukk.it/yay.gif /></div></div");
+		// 	newPage.appendTo( $.mobile.pageContainer );
+		// }
+		// $.mobile.changePage( newPage );
+	});
+
+	$('.currentLocationItem').on('click', function(event){
+		window.location = 'index.html#currentLocation';
+		state = 1;
 	});
 
 	getWeather();
@@ -136,12 +143,11 @@ $(document).on('pagecreate', '#addLocation', function()
 	console.log("In Add Location!");
 
 	$('#addLocationButton').on("click", function(event){ 
-		input = document.getElementById("locationSearch").value + " UK";
+		input = document.getElementById("locationSearch").value;
 		console.log("Input! " + input);
-		window.location = 'index.html#addedLocation';
-		window.localStorage.setItem("locationCount", addedLocationsCount);
-		locationArray.push(input);
-		getWeatherViaCity();
+		state = 2;
+		window.location = 'index.html#currentLocation';
+		console.log(state);
 	});
 });
 
@@ -157,14 +163,29 @@ $(document).on('pagecreate', '#currentLocation', function()
 	$('.feels-like').hide();
 	$('.today').hide();
 
-	getWeather();
+	if(state == 1)
+	{
+		getWeather();
+	}
+	if(state == 2)
+	{
+		getWeatherViaCity();
+	}
 
 	$('.refresh-button').on("click", function(event){
-		getWeather();
+		if(state == 1)
+		{
+			getWeather();
+		}
+		if(state == 2)
+		{
+			getWeatherViaCity();
+		}
 	});
 
 	$('.back-button').on("click", function(event){
 		window.location = 'index.html#locations';
+		state = 0;
 	});
 
 });
@@ -205,7 +226,7 @@ function getWeatherViaCity()
 		beforeSend: function() {
 			$.mobile.loading('show');
 			$('.today').hide();
-			$('.location-name').hide();
+			$('.current-location-name').hide();
 			$('.time-stamp').hide();
 			$('.current-temp').hide(); 
 			$('.current-cond').hide();
@@ -218,16 +239,16 @@ function getWeatherViaCity()
 			console.log("Got something!", result);
 			//addedLocationsCount += 1;
 			//locationArray[addedLocationsCount] = input;
-			window.localStorage.setItem("locations", JSON.stringify(locationArray));
+			//window.localStorage.setItem("locations", JSON.stringify(locationArray));
 			console.log(locationArray);
-			$('.location-name').fadeIn('slow');
+			$('.current-location-name').fadeIn('slow');
 			$('.time-stamp').fadeIn('slow');
 			$('.current-temp').fadeIn('slow');
 			$('.current-cond').fadeIn('slow');
 			$('.feels-like').fadeIn('slow');
 			$('.today').fadeIn('slow');
 			
-			displayData(result);
+			displayCurrentWeatherData(result);
 		}	
 	});
 }
@@ -320,12 +341,6 @@ function getWeather()
 				$('.weather-icon').fadeIn('slow');
 			}
 
-			
-			// error: function(request, error) {
-
-			// }
-		// });
-
 
 		});
 	});
@@ -395,6 +410,10 @@ function FigureOutIconType(data, day)
 		{
 			return "A";
 		}
+		if(weather.includes("Partly") && weather.includes("cloudy") )
+		{
+			return "D";
+		}
 	}
 	else
 	{
@@ -446,161 +465,3 @@ $(document).on('pagecreate', '#menu', function () {
 	console.log("pagecreate menu");
 
 });
-
-// $(document).on('pagecreate', '#graph', function () {
-// 	console.log("pagecreate graphs");
-
-// 	//call chart functions
-// 	create_pie_chart();
-// 	create_line_chart();
-
-// 	$(document).on("scrollstop", function(event)
-// 	{
-// 		var piechart = $('#donut').offset().top;
-// 		var linechart = $('#line').offset().top;
-
-// 		var topOfWindow = $(window).scrollTop();
-// 		var h = $(window).height();
-
-// 		console.log(piechart + ' ' + topOfWindow);
-// 		if(piechart < topOfWindow + h)
-// 		{
-// 			create_pie_chart();
-// 		}
-// 		if(linechart < topOfWindow + h)
-// 		{
-// 			create_line_chart();
-// 		}
-// 	})
-// });
-
-// $(document).on('pagecreate', '#sound', function () {
-// 	console.log("pagecreate sound");
-
-// 	$('#soundbtn').on('click', function (event)
-// 	{
-// 		console.log("play");
-// 		event.preventDefault();
-// 		audioElement = document.createElement('audio');
-// 		audioElement.setAttribute('src', 'assets/sound/beep.mp3');
-
-// 		audioElement.play();
-// 		navigator.vibrate(1000);
-// 	});
-
-// });
-
-
-
-
-
-
-
-// 	function create_pie_chart() {
-// 		console.log("donut");
-
-// 		// adds the chart to a container div in our html with an ID donut
-// 		// you can look up high charts docs but you do not need to understand below
-// 		$('#donut').highcharts({
-// 			chart: {
-// 				plotBackgroundColor: null,
-// 				plotBorderWidth: null,
-// 				plotShadow: false,
-// 				type: 'pie'
-// 			},
-// 			title: {
-// 				text: 'My Events'
-// 			},
-// 			tooltip: {
-// 				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-// 			},
-// 			legend: {
-// 				padding: 3,
-// 				itemMarginTop: 5,
-// 				itemMarginBottom: 5,
-// 				itemStyle: {
-// 					lineHeight: '14px',
-// 					color: 'white',
-// 					fontSize: '10px'
-// 				}
-// 			},
-// 			plotOptions: {
-// 				pie: {
-// 					allowPointSelect: true,
-// 					cursor: 'pointer',
-// 					dataLabels: {
-// 						enabled: false
-// 					},
-// 					showInLegend: true
-// 				}
-// 			},
-// 			series: [{
-// 				name: 'Events',
-// 				colorByPoint: true,
-// 				data: [{
-// 					name: 'Football',
-// 					y: 56.33
-// 				}, {
-// 					name: 'Judo',
-// 					y: 24.03,
-// 					sliced: true,
-// 					selected: true
-// 				}, {
-// 					name: 'Dodge Ball',
-// 					y: 10.38
-// 				}, {
-// 					name: 'Swimming',
-// 					y: 4.77
-// 				}, {
-// 					name: 'Cricket',
-// 					y: 0.91
-// 				}],
-// 				size: '90%',
-// 				innerSize: '50%'
-// 			}]
-// 		});
-// 	} //piechart
-
-// 	function create_line_chart() {
-// 		console.log("add line");
-// 		// adds the chart to a container div in our html with an ID line
-// 		// you can look up high charts docs but you do not need to understand below
-// 		$('#line').highcharts({
-// 			title: {
-// 				text: 'Monthly Activity Visits',
-// 				x: 0 //center
-// 			},
-// 			xAxis: {
-// 				categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-// 					'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-// 				]
-// 			},
-// 			yAxis: {
-// 				title: {
-// 					text: 'Visits)'
-// 				},
-// 				plotLines: [{
-// 					value: 0,
-// 					width: 1,
-// 					color: '#808080'
-// 				}]
-// 			},
-// 			tooltip: {
-// 				valueSuffix: ''
-// 			},
-// 			series: [{
-// 				name: 'Football',
-// 				data: [1, 2, 3, 4, 4, 4, 4, 4, 2, 2, 1, 1]
-// 			}, {
-// 				name: 'Judo',
-// 				data: [2, 3, 4, 4, 4, 4, 4, 2, 2, 1, 1, 1]
-// 			}, {
-// 				name: 'Dodge Ball',
-// 				data: [4, 4, 4, 4, 4, 2, 2, 1, 1, 2, 2, 2]
-// 			}, {
-// 				name: 'Swimming',
-// 				data: [4, 4, 4, 2, 2, 1, 1, 3, 3, 3, 2, 1]
-// 			}]
-// 		});
-
-// 	} //linechart
