@@ -6,12 +6,12 @@
     version     = "1.0.1" >
     
     <!-- versionCode is optional and Android only -->
-    <name>My CPD APP2</name>
+    <name>Weatherly</name>
     <description>
-        this is my description app.
+        A community based weather app.
     </description> 
-    <author href="website" email="your email">
-        Wayne Christian
+    <author href="website" email="14547879@students.lincoln.ac.uk">
+        Daniel Cumbor
     </author>
 	<!--
       This allows your app to load assets from all *.phongap.com domains

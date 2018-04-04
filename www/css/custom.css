@@ -66,6 +66,12 @@ display: block;
 	padding-left: 1vh;
 }
 
+.CurrentLocTitle {
+	font-size: 24px;
+	padding-left: 10px;
+	font-family: mont-light;
+}
+
 .day2 {
 	font-family: mont-bold;
 	color: white;
@@ -211,13 +217,46 @@ display: block;
 	height: 100vh;
 }
 
+.CurrentLocTitle {
+	font-size: 24px;
+	padding-left: 10px;
+	border-radius: 10px;
+	font-family: mont-light;
+	text-decoration: none;
+	cursor: pointer;
+	background: cornflowerblue;
+	margin: 5px;
+	color: white;
+}
+
+.addedLocation {
+	font-size: 24px;
+	padding-left: 10px;
+	border-radius: 10px;
+	font-family: mont-light;
+	text-decoration: none;
+	cursor: pointer;
+	background: coral;
+	margin: 5px;
+	color: white;
+}
+
+.section-1-locations {
+	background: white;
+	width: 100vw;
+	height: 100vh;
+}
+
 .list-buffer {
-	background: beige;
 	height: 10vh; 
 }
 
+.loc-grid {
+	display: grid;
+	grid-template-columns: 5% 90% 5%;
+}
+
 .locations-list {
-	background: aquamarine;
 	height: calc(100vh - 28vh);
 }
 
@@ -232,17 +271,18 @@ display: block;
 }
 
 .currentLocationItem {
-	background: cornflowerblue;
 	height: 8vh;
 	position: relative;
 	text-decoration: none;
 	cursor: pointer;
+	text-align: left;
+	
 }
 
 .page-title {
-	background: gray;
 	font-size: 32px;
-	padding-left: 10px;
+	padding-left: 15px;
+	padding-top: 15px;
 	font-family: mont-light;
 	height: 10vh;
 }
