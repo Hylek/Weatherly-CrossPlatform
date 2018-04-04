@@ -407,12 +407,14 @@ function getCurrentLocationName()
 			async: 'true',
 			dataType: 'json',
 			beforeSend: function() {
+				$('.CurrentLocTitle').hide();
 			},
 			complete: function(data) {
 				$.mobile.loading('hide');
 			},
 			success: function(result) {
 				$('.CurrentLocTitle').html(result.location.name);
+				$('.CurrentLocTitle').fadeIn('slow');
 			}
 		});
 	});

@@ -193,7 +193,7 @@ display: block;
 
 .container-1 {
 	display: grid;
-	grid-template-columns: 90% 10%;
+	grid-template-columns: 85% 15%;
 	height: 10vh;
 }
 
