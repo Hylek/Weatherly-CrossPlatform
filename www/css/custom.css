@@ -101,6 +101,13 @@ display: block;
 	padding-right: 1vh;
 }
 
+.addLocation-title {
+	font-size: 24px;
+	padding-top: 5vh;
+	padding-left: 5px;
+	font-family: mont-light;
+}
+
 .weekly-icon-day3 {
 	text-align: center;
 	font-family: icons;
@@ -224,9 +231,10 @@ display: block;
 	font-family: mont-light;
 	text-decoration: none;
 	cursor: pointer;
-	background: cornflowerblue;
+	/* background: cornflowerblue; */
+	border: 2px solid rgb(202,48,88);
 	margin: 5px;
-	color: white;
+	color: black;
 }
 
 .addedLocation {
@@ -236,9 +244,9 @@ display: block;
 	font-family: mont-light;
 	text-decoration: none;
 	cursor: pointer;
-	background: coral;
+	border: 2px solid rgb(255,153,72);
 	margin: 5px;
-	color: white;
+	color: black;
 }
 
 .section-1-locations {
@@ -248,7 +256,7 @@ display: block;
 }
 
 .list-buffer {
-	height: 10vh; 
+	height: 5vh; 
 }
 
 .loc-grid {
@@ -257,7 +265,7 @@ display: block;
 }
 
 .locations-list {
-	height: calc(100vh - 28vh);
+	height: calc(100vh - 23vh);
 }
 
 .loc-button {
@@ -301,8 +309,29 @@ display: block;
 	text-decoration: none;
 }
 
+.addLocation-field {
+	padding-top: 2vh;
+	display: grid;
+	grid-template-columns: 20% 60% 20%;
+}
+
 .add-button {
-	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));;
+	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));
+	border-radius: 25px;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+	cursor: pointer;
+	font-family: mont-bold;
+	text-decoration: none;
+}
+
+.add-location-button {
+	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));
 	border-radius: 25px;
     color: white;
     padding: 7px 10px;

@@ -80,6 +80,10 @@ function innit() {
 	$('.day2').hide();
 	$('.day3').hide();
 	$('.back-button').hide();
+	$('#loc1').hide();
+	$('#loc2').hide();
+	$('#loc3').hide();
+	$('#loc4').hide();
 
 
 	// $(function(){
@@ -188,17 +192,36 @@ $(document).on('pageshow', '#currentLocation', function()
 
 $(document).on('pageshow', '#locations', function()
 {
-	if(getTitle == 0)
-	{
-		getCurrentLocationName();
-		getTitle = 1;
-	}
+	// Only asks once
+	// if(getTitle == 0)
+	// {
+	// 	getCurrentLocationName();
+	// 	getTitle = 1;
+	// }
 
+	getCurrentLocationName();		
 	saveData();
-	$('#loc1').html(locationArray[0]);
-	$('#loc2').html(locationArray[1]);
-	$('#loc3').html(locationArray[2]);
-	$('#loc4').html(locationArray[3]);
+
+	if(locationArray[0] != null)
+	{
+		$('#loc1').html(locationArray[0]);
+		$('#loc1').fadeIn('slow');
+	}
+	if(locationArray[1] != null)
+	{
+		$('#loc2').html(locationArray[1]);
+		$('#loc2').fadeIn('slow');
+	}
+	if(locationArray[2] != null)
+	{
+		$('#loc3').html(locationArray[2]);
+		$('#loc3').fadeIn('slow');
+	}
+	if(locationArray[3] != null)
+	{
+		$('#loc4').html(locationArray[3]);
+		$('#loc4').fadeIn('slow');
+	}
 
 	$('.CurrentLocTitle').on('click', function(event){
 		$('.section-1').hide();
