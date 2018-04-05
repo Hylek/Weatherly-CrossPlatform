@@ -5,14 +5,18 @@ var audioElement;
 var state = 0;
 var getTitle = 0;
 
-var currentWeather = "";
-var currentLocation = "";
 var input = "";
-var addedLocationsCount = 0;
 
 var locationArray = [,];
+var storedLocations;
 
 // add device and doc ready
+
+$('.CurrentLocTitle').hide();
+$('#loc1').hide();
+$('#loc2').hide();
+$('#loc3').hide();
+$('#loc4').hide();
 
 function onDeviceReady()
 {
@@ -29,23 +33,22 @@ $(document).ready(function()
 var owl = $('.owl-carousel');
 
 function innit() {
-	//localStorage.clear();
+	//window.localStorage.clear();
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
-	addedLocationsCount = window.localStorage.getItem("locationCount");
-	locationArray = JSON.parse(window.localStorage.getItem("locations"));
-	if(locationArray == null)
+	console.log("Stored Locations: " + storedLocations);
+
+	if(storedLocations == "[null]")
+	{
+		//window.localStorage.clear();
+	}
+	else if(locationArray == null)
 	{
 		locationArray = [];
 	}
 
-	console.log(locationArray);
 
-	if(localStorage.getItem("firstTime") === 1)
-	{
-		window.location = 'index.html#locations';
-	}
 	$(".owl-carousel").owlCarousel({
 			items: 1
 	});
@@ -58,7 +61,6 @@ function innit() {
 	{
 		$('body').addClass('offline');
 	}
-
 
 	$('.section-1').hide();
 	$('.today').hide();
@@ -80,23 +82,6 @@ function innit() {
 	$('.day2').hide();
 	$('.day3').hide();
 	$('.back-button').hide();
-	$('#loc1').hide();
-	$('#loc2').hide();
-	$('#loc3').hide();
-	$('#loc4').hide();
-
-
-	// $(function(){
-  // 	$('.bxslider').bxSlider({
-  //   	mode: 'fade',
-  //   	captions: false,
-  //   	slideWidth: 600
-  // });
-
-// 	$('.slick-test').slick({
-// 	setting-name: setting-value
-// });
-// });
 }
 
 owl.on('changed.owl.carousel', function(event) {
@@ -108,27 +93,12 @@ owl.on('changed.owl.carousel', function(event) {
 	}
 })
 
-$(document).on('pagecreate', '#locations', function()
-{
-	var newPage;
-	$('.add-button').on("click", function(event){
-		window.location = 'index.html#addLocation';
-		
-		// if($('#wew').length <= 0) {
-		// 	newPage = $("<div data-role=page data-url=yay id=wew><div data-role=header><h1>YAY!!!!</h1></div><div data-role=content><img src=http://bukk.it/yay.gif /></div></div");
-		// 	newPage.appendTo( $.mobile.pageContainer );
-		// }
-		// $.mobile.changePage( newPage );
-	});
+// $(document).on('pagecreate', '#locations', function()
+// {
+// 	var newPage;
+// });
 
-	$('.currentLocationItem').on('click', function(event){
-		$('.section-1').hide();
-		window.location = 'index.html#currentLocation';
-		state = 1;
-	});
-});
-
-$(document).on('pagecreate', '#addLocation', function()
+$(document).on('pageshow', '#addLocation', function()
 {
 	console.log("In Add Location!");
 
@@ -139,6 +109,8 @@ $(document).on('pagecreate', '#addLocation', function()
 		if(locationArray.length <= 3)
 		{
 			locationArray.push(input);
+			saveData();
+			console.log("Stored Locations! " + localStorage.getItem("locations"));
 		}
 		console.log(locationArray);
 		$('.section-1').hide();
@@ -150,14 +122,6 @@ $(document).on('pagecreate', '#addLocation', function()
 $(document).on('pageshow', '#currentLocation', function()
 {
 	console.log("locations page loaded");
-
-	// $('.today').hide();
-	// $('.location-name').hide();
-	// $('.time-stamp').hide();
-	// $('.current-temp').hide(); 
-	// $('.current-cond').hide();
-	// $('.feels-like').hide();
-	// $('.today').hide();
 
 	if(state == 1)
 	{
@@ -190,27 +154,51 @@ $(document).on('pageshow', '#currentLocation', function()
 
 });
 
+// $(document).on('pagebeforeshow', '#locations', function()
+// {
+// 	console.log("Page before show!");
+// 	getCurrentLocationName();		
+// })
+$('.add-button').on("click", function(event){
+	window.location = 'index.html#addLocation';
+});
+
+$('.currentLocationItem').on('click', function(event){
+	$('.section-1').hide();
+	window.location = 'index.html#currentLocation';
+	state = 1;
+});
+
+$('.CurrentLocTitle').on('click', function(event){
+	$('.section-1').hide();
+	state = 1;
+	window.location = 'index.html#currentLocation';
+});
+
 $(document).on('pageshow', '#locations', function()
 {
-	// Only asks once
-	// if(getTitle == 0)
-	// {
-	// 	getCurrentLocationName();
-	// 	getTitle = 1;
-	// }
+	console.log("SHOWED PAGE");
+	getCurrentLocationName();	// THIS WORKS FIRST LOAD	
 
-	getCurrentLocationName();		
-	saveData();
 
-	if(locationArray[0] != null)
+	storedLocations = localStorage.getItem("locations");
+	if(storedLocations != null || storedLocations != "[null]")
+	{
+		//locationArray = JSON.parse(localStorage["locations"]);
+		locationArray = JSON.parse(storedLocations); // This turns into a string WTF!
+		console.log("Current Status of Location Array: " + locationArray);
+		//locationArray = window.localStorage.getItem("locations");
+	}
+	console.log(locationArray);
+
+	// THIS NO WORKY FIRST LOAD
+	if(locationArray[0] != "")
 	{
 		$('#loc1').html(locationArray[0]);
-		$('#loc1').fadeIn('slow');
 	}
-	if(locationArray[1] != null)
+	if(locationArray[1] != "")
 	{
 		$('#loc2').html(locationArray[1]);
-		$('#loc2').fadeIn('slow');
 	}
 	if(locationArray[2] != null)
 	{
@@ -222,12 +210,6 @@ $(document).on('pageshow', '#locations', function()
 		$('#loc4').html(locationArray[3]);
 		$('#loc4').fadeIn('slow');
 	}
-
-	$('.CurrentLocTitle').on('click', function(event){
-		$('.section-1').hide();
-		state = 1;
-		window.location = 'index.html#currentLocation';
-	});
 
 	$('#loc1').on('click', function(event) {
 		$('.section-1').hide();
@@ -258,8 +240,7 @@ $(document).on('pageshow', '#locations', function()
 
 function saveData()
 {
-	var stringed = JSON.stringify(locationArray);
-	localStorage.setItem("locations", stringed);
+	localStorage.setItem("locations", JSON.stringify(locationArray));
 }
 
 function getWeatherViaCity()
@@ -411,8 +392,6 @@ function getWeather()
 				$('.weekly-icon-day3').fadeIn('slow');
 				$('.weather-icon').fadeIn('slow');
 			}
-
-
 		});
 	});
 }
@@ -438,6 +417,14 @@ function getCurrentLocationName()
 			success: function(result) {
 				$('.CurrentLocTitle').html(result.location.name);
 				$('.CurrentLocTitle').fadeIn('slow');
+				if(locationArray[0] != "")
+				{
+					$('#loc1').fadeIn('slow');
+				}
+				if(locationArray[1] != "")
+				{
+					$('#loc2').fadeIn('slow');
+				}
 			}
 		});
 	});
