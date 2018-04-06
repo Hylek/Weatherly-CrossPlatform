@@ -9,6 +9,7 @@ var input = "";
 
 var locationArray = [,];
 var storedLocations;
+var ratings;
 
 // add device and doc ready
 
@@ -38,6 +39,9 @@ function innit() {
 	document.addEventListener("offline", onOffline, false);
 
 	console.log("Stored Locations: " + storedLocations);
+
+	getUserAnswer();
+	postUserAnswer();
 
 	if(storedLocations == "[null]")
 	{
@@ -393,6 +397,35 @@ function getWeather()
 				$('.weather-icon').fadeIn('slow');
 			}
 		});
+	});
+}
+
+function getUserAnswer()
+{
+	$.ajax({
+		url: 'https://secret-meadow-93624.herokuapp.com/ratings',
+		type: 'GET',
+		async: 'true',
+		dataType: 'json',
+		success: function(result) {
+			ratings = result;
+			ratings[0].yes = 5;
+			console.log(ratings[0].yes);
+		}
+	});
+}
+
+function postUserAnswer()
+{
+	$.ajax({
+		url: 'https://secret-meadow-93624.herokuapp.com/ratings/5ac6ab40d3ebac00147e9aa3',
+		type: 'PUT',
+		async: 'true',
+		data: {
+			location: "Lincoln",
+			yes: "22",
+			no: "4"
+		}
 	});
 }
 
