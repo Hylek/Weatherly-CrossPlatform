@@ -9,7 +9,11 @@ var input = "";
 
 var locationArray = [,];
 var storedLocations;
-var ratings;
+var userResponse;
+var yesRatings;
+var noRatings;
+var setRating;
+var hasResponded;
 
 // add device and doc ready
 
@@ -18,6 +22,8 @@ $('#loc1').hide();
 $('#loc2').hide();
 $('#loc3').hide();
 $('#loc4').hide();
+$('.popup').hide();
+$('.community-ratings').hide();
 
 function onDeviceReady()
 {
@@ -52,7 +58,9 @@ function innit() {
 		locationArray = [];
 	}
 
-
+	userResponse = 0;
+	setRating = false;
+	hasResponded = false;
 	$(".owl-carousel").owlCarousel({
 			items: 1
 	});
@@ -143,6 +151,7 @@ $(document).on('pageshow', '#currentLocation', function()
 		{
 			$('.section-1').hide();
 			getWeather();
+			updateCommunityRatings();
 		}
 		if(state == 2)
 		{
@@ -151,7 +160,13 @@ $(document).on('pageshow', '#currentLocation', function()
 		}
 	});
 
+	updateCommunityRatings();
+
 	$('.back-button').on("click", function(event){
+		$('#loc1').hide();
+		$('#loc2').hide();	
+		$('#loc3').hide();
+		$('#loc4').hide();
 		window.location = 'index.html#locations';
 		state = 0;
 	});
@@ -165,6 +180,20 @@ $(document).on('pageshow', '#currentLocation', function()
 // })
 $('.add-button').on("click", function(event){
 	window.location = 'index.html#addLocation';
+});
+
+$('.yes-button').on("click", function(event){
+	$('.popup').fadeOut('slow');
+	userResponse = 1;
+	setRating = true;
+	getUserAnswer();
+});
+
+$('.no-button').on("click", function(event){
+	$('.popup').fadeOut('slow');
+	userResponse = 2;
+	setRating = true;
+	getUserAnswer();
 });
 
 $('.currentLocationItem').on('click', function(event){
@@ -279,7 +308,6 @@ function getWeatherViaCity()
 		}	
 	});
 
-	
 	$.ajax({
 		url: 'https://api.apixu.com/v1/forecast.json?key=b3818c2db71747f78d2185718181403&q=' + input + '&days=4',
 		type: 'get',
@@ -310,8 +338,6 @@ function getWeatherViaCity()
 			$('.weekly-icon-day3').fadeIn('slow');
 			$('.weather-icon').fadeIn('slow');
 		}
-
-
 	});
 }
 
@@ -408,25 +434,50 @@ function getUserAnswer()
 		async: 'true',
 		dataType: 'json',
 		success: function(result) {
-			ratings = result;
-			ratings[0].yes = 5;
-			console.log(ratings[0].yes);
+			//console.log(ratings[0].yes);
+			yesRatings = result[0].yes;
+			noRatings = result[0].no;
+			if(setRating)
+			{
+				postUserAnswer();
+				setRating = false;
+			}
 		}
 	});
 }
 
 function postUserAnswer()
 {
-	$.ajax({
-		url: 'https://secret-meadow-93624.herokuapp.com/ratings/5ac6ab40d3ebac00147e9aa3',
-		type: 'PUT',
-		async: 'true',
-		data: {
-			location: "Lincoln",
-			yes: "22",
-			no: "4"
-		}
-	});
+	if(userResponse == 1)
+	{
+		$.ajax({
+			url: 'https://secret-meadow-93624.herokuapp.com/ratings/5ac6ab40d3ebac00147e9aa3',
+			type: 'PUT',
+			async: 'true',
+			data: {
+				location: "Lincoln", // This will be data.location.name
+				yes: yesRatings = ++yesRatings,
+				no: noRatings
+			}
+		});
+		userResponse = 0;
+		hasResponded = true;
+	}
+	if(userResponse == 2)
+	{
+		$.ajax({
+			url: 'https://secret-meadow-93624.herokuapp.com/ratings/5ac6ab40d3ebac00147e9aa3',
+			type: 'PUT',
+			async: 'true',
+			data: {
+				location: "Lincoln", // This will be data.location.name
+				yes: yesRatings,
+				no: noRatings = ++noRatings
+			}
+		});
+		userResponse = 0;
+		hasResponded = true;
+	}
 }
 
 function getCurrentLocationName()
@@ -450,17 +501,47 @@ function getCurrentLocationName()
 			success: function(result) {
 				$('.CurrentLocTitle').html(result.location.name);
 				$('.CurrentLocTitle').fadeIn('slow');
-				if(locationArray[0] != "")
+				if(locationArray.length >= 1)
 				{
 					$('#loc1').fadeIn('slow');
 				}
-				if(locationArray[1] != "")
+				if(locationArray.length >= 2)
 				{
 					$('#loc2').fadeIn('slow');
+				}
+				if(locationArray.length >= 3)
+				{
+					$('#loc3').fadeIn('slow');
+				}
+				if(locationArray.length >= 4)
+				{
+					$('#loc4').fadeIn('slow');
 				}
 			}
 		});
 	});
+}
+
+$('#loc1').on("taphold", function(event){
+	$('#loc1').fadeOut('fast');
+	locationArray.splice(1, 1);
+});
+$('#loc2').on("taphold", function(event){
+	$('#loc2').fadeOut('fast');
+	locationArray.splice(2, 1);
+});
+$('#loc3').on("taphold", function(event){
+	$('#loc3').fadeOut('fast');
+	locationArray.splice(3, 1);
+});
+$('#loc4').on("taphold", function(event){
+	$('#loc4').fadeOut('fast');
+	locationArray.splice(4, 1);
+});
+
+function updateCommunityRatings() 
+{
+	$('.community-ratings').html("Yes: " + yesRatings + " No: " + noRatings);	
 }
 
 function displayForecastedWeatherData(data)
@@ -489,6 +570,21 @@ function displayCurrentWeatherData(data)
 	$('.current-cond').html(data.current.condition.text);
 	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
 	$('.weather-icon').html(FigureOutIconType(data, 0));
+
+	if(data.current.condition.text.includes("rain") || data.current.condition.text.includes("snow"))
+	{
+		console.log("It is raining currently!");
+
+		// Fadein popup asking if it is actually raining!
+		if(!hasResponded)
+		{
+			$(".popup").fadeIn('slow');
+			$('.community-ratings').fadeIn('slow');
+		}
+	}
+	else{
+		$('.community-ratings').fadeOut('slow');
+	}
 }
 
 function displayData(data)

@@ -204,6 +204,59 @@ display: block;
 	height: 10vh;
 }
 
+.popup {
+	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));
+	position: absolute;
+	top: 30vh;
+	width: 100vw;
+	height: 30vh;
+}
+
+.popup-question {
+	font-family: mont-light;
+	color: white;
+	font-size: 24px;
+	text-align: center;
+}
+
+.popup-buffer {
+	height: 19vh;
+}
+
+.popup-footer {
+	bottom: 0;
+	display: grid;
+	grid-template-columns: 30% 40% 30%;
+}
+
+.yes-button {
+	background-color: white;
+	border-radius: 25px;
+    color: black;
+    padding: 7px 10px;
+    text-align: center;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+	cursor: pointer;
+	font-family: mont-bold;
+	text-decoration: none;
+}
+
+.no-button {
+	background-color: white;
+	border-radius: 25px;
+    color: black;
+    padding: 7px 10px;
+    text-align: center;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+	cursor: pointer;
+	font-family: mont-bold;
+	text-decoration: none;
+}
+
 .container-2 {
 	height: 50vh;
 }
@@ -231,7 +284,6 @@ display: block;
 	font-family: mont-light;
 	text-decoration: none;
 	cursor: pointer;
-	/* background: cornflowerblue; */
 	border: 2px solid rgb(202,48,88);
 	margin: 5px;
 	color: black;
@@ -395,8 +447,8 @@ display: block;
 	text-align: left;
 	color: white;
 	font-family: mont-light;
-	padding-left: 1vw;
-	padding-top: 4vh;
+	padding-left: 2vw;
+	padding-top: 3vh;
 }
 
 #currentLocation {
@@ -424,6 +476,13 @@ display: block;
 	padding-top: 5px;
 	text-align: center;
 	font-family: mont-light;
+}
+
+.community-ratings {
+	padding-top: 5px;
+	text-align: center;
+	font-family: mont-bold;
+	font-size: 10px;
 }
 
 .button-buffer {
