@@ -14,16 +14,9 @@ var yesRatings;
 var noRatings;
 var setRating;
 var hasResponded;
+var gotName = 0;
 
 // add device and doc ready
-
-$('.CurrentLocTitle').hide();
-$('#loc1').hide();
-$('#loc2').hide();
-$('#loc3').hide();
-$('#loc4').hide();
-$('.popup').hide();
-$('.community-ratings').hide();
 
 function onDeviceReady()
 {
@@ -40,6 +33,13 @@ $(document).ready(function()
 var owl = $('.owl-carousel');
 
 function innit() {
+	$('.CurrentLocTitle').hide();	
+	$('#loc1').hide();
+	$('#loc2').hide();
+	$('#loc3').hide();
+	$('#loc4').hide();
+	$('.popup').hide();
+	$('.community-ratings').hide();
 	//window.localStorage.clear();
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
@@ -105,11 +105,6 @@ owl.on('changed.owl.carousel', function(event) {
 	}
 })
 
-// $(document).on('pagecreate', '#locations', function()
-// {
-// 	var newPage;
-// });
-
 $(document).on('pageshow', '#addLocation', function()
 {
 	console.log("In Add Location!");
@@ -128,6 +123,7 @@ $(document).on('pageshow', '#addLocation', function()
 		$('.section-1').hide();
 		window.location = 'index.html#currentLocation';
 		console.log(state);
+		restoreBuffers();
 	});
 });
 
@@ -151,7 +147,6 @@ $(document).on('pageshow', '#currentLocation', function()
 		{
 			$('.section-1').hide();
 			getWeather();
-			updateCommunityRatings();
 		}
 		if(state == 2)
 		{
@@ -173,11 +168,6 @@ $(document).on('pageshow', '#currentLocation', function()
 
 });
 
-// $(document).on('pagebeforeshow', '#locations', function()
-// {
-// 	console.log("Page before show!");
-// 	getCurrentLocationName();		
-// })
 $('.add-button').on("click", function(event){
 	window.location = 'index.html#addLocation';
 });
@@ -211,8 +201,8 @@ $('.CurrentLocTitle').on('click', function(event){
 $(document).on('pageshow', '#locations', function()
 {
 	console.log("SHOWED PAGE");
-	getCurrentLocationName();	// THIS WORKS FIRST LOAD	
 
+	getCurrentLocationName();
 
 	storedLocations = localStorage.getItem("locations");
 	if(storedLocations != null || storedLocations != "[null]")
@@ -224,7 +214,6 @@ $(document).on('pageshow', '#locations', function()
 	}
 	console.log(locationArray);
 
-	// THIS NO WORKY FIRST LOAD
 	if(locationArray[0] != "")
 	{
 		$('#loc1').html(locationArray[0]);
@@ -233,15 +222,13 @@ $(document).on('pageshow', '#locations', function()
 	{
 		$('#loc2').html(locationArray[1]);
 	}
-	if(locationArray[2] != null)
+	if(locationArray[2] != "")
 	{
 		$('#loc3').html(locationArray[2]);
-		$('#loc3').fadeIn('slow');
 	}
-	if(locationArray[3] != null)
+	if(locationArray[3] != "")
 	{
 		$('#loc4').html(locationArray[3]);
-		$('#loc4').fadeIn('slow');
 	}
 
 	$('#loc1').on('click', function(event) {
@@ -341,6 +328,12 @@ function getWeatherViaCity()
 	});
 }
 
+function getName(index)
+{
+	var locationName = locationArray[index];
+	return locationName;
+}
+
 function getWeather()
 {
 	var lat = 0;
@@ -351,13 +344,6 @@ function getWeather()
 		long = pos.coords.longitude;
 		console.log("COORDS " + lat + " " + long);
 
-		//  $.get("https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=" + lat + "," + long, function(data){
-		//  	console.log("Found something!");
-		// 	 displayData(data);
-		// 	 var stringed = JSON.stringify(data);
-		// 	 console.log("OLD VERSION " + stringed);
-		// });
-
 		$.ajax({
 			url: 'https://api.apixu.com/v1/current.json?key=b3818c2db71747f78d2185718181403&q=' + lat + ',' + long,
 			type: 'get',
@@ -365,13 +351,6 @@ function getWeather()
 			dataType: 'json',
 			beforeSend: function() {
 				$.mobile.loading('show');
-				// $('.today').hide();
-				// $('.current-location-name').hide();
-				// $('.time-stamp').hide();
-				// $('.current-temp').hide();
-				// $('.current-cond').hide();
-				// $('.feels-like').hide();
-				// $('.today').hide();
 				$('.section-1').fadeOut('slow');
 			},
 			complete: function(data) {
@@ -524,20 +503,39 @@ function getCurrentLocationName()
 
 $('#loc1').on("taphold", function(event){
 	$('#loc1').fadeOut('fast');
-	locationArray.splice(1, 1);
+	$('.loc1-buffer').fadeOut('fast');
+	saveData();
+	console.log(locationArray);
+	console.log(locationArray.find());
 });
 $('#loc2').on("taphold", function(event){
 	$('#loc2').fadeOut('fast');
-	locationArray.splice(2, 1);
+	$('.loc2-buffer').fadeOut('fast');
+
+	saveData();
 });
 $('#loc3').on("taphold", function(event){
 	$('#loc3').fadeOut('fast');
-	locationArray.splice(3, 1);
+	$('.loc3-buffer').fadeOut('fast');
+
+	saveData();
+	console.log(locationArray);
 });
 $('#loc4').on("taphold", function(event){
 	$('#loc4').fadeOut('fast');
-	locationArray.splice(4, 1);
+	$('.loc4-buffer').fadeOut('fast');
+	locationArray.pop();
+	saveData();
+	console.log(locationArray);
 });
+
+function restoreBuffers()
+{
+	$('.loc1-buffer').fadeIn('fast');
+	$('.loc2-buffer').fadeIn('fast');
+	$('.loc3-buffer').fadeIn('fast');
+	$('.loc4-buffer').fadeIn('fast');
+}
 
 function updateCommunityRatings() 
 {
@@ -578,6 +576,7 @@ function displayCurrentWeatherData(data)
 		// Fadein popup asking if it is actually raining!
 		if(!hasResponded)
 		{
+			updateCommunityRatings();
 			$(".popup").fadeIn('slow');
 			$('.community-ratings').fadeIn('slow');
 		}
@@ -635,6 +634,10 @@ function FigureOutIconType(data, day)
 		{
 			return "G";
 		}
+		if(weather.includes("Mist"))
+		{
+			return "E";
+		}
 	}
 	else
 	{
@@ -658,6 +661,10 @@ function FigureOutIconType(data, day)
 		if(weather.includes("Fog"))
 		{
 			return "G";
+		}
+		if(weather.includes("Mist"))
+		{
+			return "E";
 		}
 	}
 }

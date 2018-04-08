@@ -192,7 +192,6 @@ display: block;
 	font-family: mont-med;
 }
 
-
 .refresh {
 	text-align: center;
 	padding-right: 1vh;
@@ -208,11 +207,14 @@ display: block;
 	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));
 	position: absolute;
 	top: 30vh;
-	width: 100vw;
+	width: 75vw;
 	height: 30vh;
+	left: 13vw;
+	border-radius: 10px;
 }
 
 .popup-question {
+	padding-top: 3vh;
 	font-family: mont-light;
 	color: white;
 	font-size: 24px;
@@ -220,13 +222,13 @@ display: block;
 }
 
 .popup-buffer {
-	height: 19vh;
+	height: 15vh;
 }
 
 .popup-footer {
 	bottom: 0;
 	display: grid;
-	grid-template-columns: 30% 40% 30%;
+	grid-template-columns: 5% 30% 30% 30% 5%;
 }
 
 .yes-button {
@@ -268,7 +270,7 @@ display: block;
 }
 
 .container-3-buffer {
-	height: 20vh;
+	height: 18vh;
 }
 
 .section-1 {
@@ -285,8 +287,13 @@ display: block;
 	text-decoration: none;
 	cursor: pointer;
 	border: 2px solid rgb(202,48,88);
-	margin: 5px;
+	margin: 20px;
 	color: black;
+}
+
+.list {
+	padding: 0;
+	list-style-type: none;
 }
 
 .addedLocation {
@@ -297,7 +304,7 @@ display: block;
 	text-decoration: none;
 	cursor: pointer;
 	border: 2px solid rgb(255,153,72);
-	margin: 5px;
+	margin: 20px;
 	color: black;
 }
 
