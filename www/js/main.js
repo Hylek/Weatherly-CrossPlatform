@@ -7,8 +7,8 @@ var getTitle = 0;
 
 var input = "";
 
-var locationArray = [,];
-var storedLocations;
+var locationArray = [];
+//var storedLocations;
 var userResponse;
 var yesRatings;
 var noRatings;
@@ -40,20 +40,20 @@ function innit() {
 	$('#loc4').hide();
 	$('.popup').hide();
 	$('.community-ratings').hide();
-	//window.localStorage.clear();
+	window.localStorage.clear();
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
-	console.log("Stored Locations: " + storedLocations);
+	//console.log("Stored Locations: " + storedLocations);
 
 	getUserAnswer();
-	postUserAnswer();
+	//postUserAnswer();
 
-	if(storedLocations == "[null]")
-	{
-		//window.localStorage.clear();
-	}
-	else if(locationArray == null)
+	// if(storedLocations == "[null]")
+	// {
+	// 	//window.localStorage.clear();
+	// }
+	if(locationArray == null)
 	{
 		locationArray = [];
 	}
@@ -204,14 +204,14 @@ $(document).on('pageshow', '#locations', function()
 
 	getCurrentLocationName();
 
-	storedLocations = localStorage.getItem("locations");
-	if(storedLocations != null || storedLocations != "[null]")
-	{
-		//locationArray = JSON.parse(localStorage["locations"]);
-		locationArray = JSON.parse(storedLocations); // This turns into a string WTF!
-		console.log("Current Status of Location Array: " + locationArray);
-		//locationArray = window.localStorage.getItem("locations");
-	}
+	loadData();
+
+	// storedLocations = localStorage.getItem("locations");
+	// if(storedLocations != null || storedLocations != "[null]")
+	// {
+	// 	//locationArray = JSON.parse(localStorage["locations"]);
+
+
 	console.log(locationArray);
 
 	if(locationArray[0] != "")
@@ -257,6 +257,26 @@ $(document).on('pageshow', '#locations', function()
 	});
 });
 
+function loadData()
+{
+	var savedLocations;
+	if(locationArray == null)
+	{
+		locationArray = [];
+	}
+	else if(locationArray != null)
+	{
+		savedLocations = localStorage.getItem("locations");
+	}
+	if(savedLocations == null)
+	{
+		console.log("THERE IS NO SAVED DATA");
+	}
+	else
+	{
+		locationArray = JSON.parse(localStorage["locations"]);
+	}
+}
 
 function saveData()
 {
