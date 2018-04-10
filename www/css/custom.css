@@ -201,6 +201,7 @@ display: block;
 	display: grid;
 	grid-template-columns: 85% 15%;
 	height: 10vh;
+	/* background: coral; */
 }
 
 .popup {

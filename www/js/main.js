@@ -8,15 +8,13 @@ var getTitle = 0;
 var input = "";
 
 var locationArray = [];
-//var storedLocations;
 var userResponse;
 var yesRatings;
 var noRatings;
 var setRating;
 var hasResponded;
 var gotName = 0;
-
-// add device and doc ready
+var locationToDelete = "";
 
 function onDeviceReady()
 {
@@ -40,19 +38,11 @@ function innit() {
 	$('#loc4').hide();
 	$('.popup').hide();
 	$('.community-ratings').hide();
-	window.localStorage.clear();
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
-	//console.log("Stored Locations: " + storedLocations);
-
 	getUserAnswer();
-	//postUserAnswer();
 
-	// if(storedLocations == "[null]")
-	// {
-	// 	//window.localStorage.clear();
-	// }
 	if(locationArray == null)
 	{
 		locationArray = [];
@@ -100,7 +90,6 @@ owl.on('changed.owl.carousel', function(event) {
 	if(event.page.index == 3)
 	{
 		console.log("Loading locations page!");
-		//localStorage.setItem("firstTime", 1);
 		window.location = 'index.html#locations';
 	}
 })
@@ -115,10 +104,18 @@ $(document).on('pageshow', '#addLocation', function()
 		state = 2;
 		if(locationArray.length <= 3)
 		{
-			locationArray.push(input);
-			saveData();
-			console.log("Stored Locations! " + localStorage.getItem("locations"));
+			if($.inArray(input, locationArray) < 0)
+			{
+				locationArray.push(input);
+				saveData();
+				console.log("Stored Locations! " + localStorage.getItem("locations"));
+			}
 		}
+		if(locationArray.indexOf(input) > 0)
+		{
+			console.log("Location has already been added!");
+		}
+
 		console.log(locationArray);
 		$('.section-1').hide();
 		window.location = 'index.html#currentLocation';
@@ -155,7 +152,10 @@ $(document).on('pageshow', '#currentLocation', function()
 		}
 	});
 
-	updateCommunityRatings();
+	if(state == 1)
+	{
+		updateCommunityRatings();
+	}
 
 	$('.back-button').on("click", function(event){
 		$('#loc1').hide();
@@ -205,12 +205,6 @@ $(document).on('pageshow', '#locations', function()
 	getCurrentLocationName();
 
 	loadData();
-
-	// storedLocations = localStorage.getItem("locations");
-	// if(storedLocations != null || storedLocations != "[null]")
-	// {
-	// 	//locationArray = JSON.parse(localStorage["locations"]);
-
 
 	console.log(locationArray);
 
@@ -321,7 +315,7 @@ function getWeatherViaCity()
 		async: 'true',
 		dataType: 'json',
 		beforeSend: function() {
-			$.mobile.loading('show');
+			//$.mobile.loading('show');
 			console.log("GETTING FORECAST");
 			$('.weekly-temp-tomorrow').hide();
 			$('.tomorrow').hide();
@@ -329,7 +323,7 @@ function getWeatherViaCity()
 			$('.weekly-temp-day3').hide();
 		},
 		complete: function(data) {
-			$.mobile.loading('hide');
+			//$.mobile.loading('hide');
 		},
 		success: function(result) {
 			displayForecastedWeatherData(result);
@@ -521,33 +515,65 @@ function getCurrentLocationName()
 	});
 }
 
+// Delete listeners start
+
 $('#loc1').on("taphold", function(event){
-	$('#loc1').fadeOut('fast');
+	var index = locationArray.indexOf($('#loc1').text());
+	console.log(index);
+
+	if(index > -1)
+	{
+		locationArray.splice(index, 1);
+	}
+	$('#loc1').slideUp();
 	$('.loc1-buffer').fadeOut('fast');
+
 	saveData();
 	console.log(locationArray);
-	console.log(locationArray.find());
 });
 $('#loc2').on("taphold", function(event){
-	$('#loc2').fadeOut('fast');
+	var index = locationArray.indexOf($('#loc2').text());
+	console.log(index);
+	if(index > -1)
+	{
+		locationArray.splice(index, 1);
+	}
+
+	$('#loc2').slideUp();
 	$('.loc2-buffer').fadeOut('fast');
 
 	saveData();
+	console.log(locationArray);
 });
 $('#loc3').on("taphold", function(event){
-	$('#loc3').fadeOut('fast');
+	var index = locationArray.indexOf($('#loc3').text());
+	console.log(index);
+	if(index > -1)
+	{
+		locationArray.splice(index, 1);
+	}
+
+	$('#loc3').slideUp();
 	$('.loc3-buffer').fadeOut('fast');
 
 	saveData();
 	console.log(locationArray);
 });
 $('#loc4').on("taphold", function(event){
-	$('#loc4').fadeOut('fast');
+	var index = locationArray.indexOf($('#loc4').text());
+	console.log(index);
+	if(index > -1)
+	{
+		locationArray.splice(index, 1);
+	}
+	$('#loc4').slideUp();
 	$('.loc4-buffer').fadeOut('fast');
-	locationArray.pop();
+
 	saveData();
 	console.log(locationArray);
 });
+
+// Delete listeners end
 
 function restoreBuffers()
 {
@@ -594,7 +620,7 @@ function displayCurrentWeatherData(data)
 		console.log("It is raining currently!");
 
 		// Fadein popup asking if it is actually raining!
-		if(!hasResponded)
+		if(!hasResponded && state == 1)
 		{
 			updateCommunityRatings();
 			$(".popup").fadeIn('slow');
