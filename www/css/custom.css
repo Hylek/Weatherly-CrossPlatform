@@ -72,6 +72,24 @@ display: block;
 	font-family: mont-light;
 }
 
+.customButton {
+    background-color: rgb(255,153,72); /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+	font-size: 16px;
+	width: 100%;
+	border-radius: 5px;
+}
+
+.customButton:active {
+	box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	background-color: #45a049;
+}
+
 .day2 {
 	font-family: mont-bold;
 	color: white;
@@ -139,6 +157,17 @@ display: block;
 	bottom: 0;
 	width: 100%;
 	text-align: left;
+}
+
+/* Theme from https://www.w3schools.com/css/tryit.asp?filename=trycss_forms */
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .owl-carousel .owl-item{
@@ -325,7 +354,7 @@ display: block;
 }
 
 .locations-list {
-	height: calc(100vh - 23vh);
+	height: calc(100vh - 32vh);
 }
 
 .loc-button {

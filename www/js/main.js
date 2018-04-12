@@ -102,7 +102,12 @@ $(document).on('pageshow', '#addLocation', function()
 		input = document.getElementById("locationSearch").value;
 		console.log("Input! " + input);
 		state = 2;
-		if(locationArray.length <= 3)
+
+		if(input == "" || input == null || input == " ")
+		{
+			alert("Please enter a location to continue!");
+		}
+		if(locationArray.length <= 3 && input != "" && input != " ")
 		{
 			if($.inArray(input, locationArray) < 0)
 			{
@@ -168,7 +173,7 @@ $(document).on('pageshow', '#currentLocation', function()
 
 });
 
-$('.add-button').on("click", function(event){
+$('#addNewLocation').on("click", function(event){
 	window.location = 'index.html#addLocation';
 });
 
