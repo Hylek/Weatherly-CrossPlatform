@@ -234,19 +234,21 @@ input[type=text], select {
 }
 
 .popup {
-	background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72));
+	/* background: linear-gradient(to right, rgb(202,48,88) , rgb(255,153,72)); */
+	background: white;
+	border: 2px solid rgb(255,153,72);
 	position: absolute;
 	top: 30vh;
 	width: 75vw;
 	height: 30vh;
 	left: 13vw;
-	border-radius: 10px;
+	border-radius: 4px;
 }
 
 .popup-question {
 	padding-top: 3vh;
 	font-family: mont-light;
-	color: white;
+	color: black;
 	font-size: 18px;
 	text-align: center;
 }
@@ -262,9 +264,9 @@ input[type=text], select {
 }
 
 .yes-button {
-	background-color: white;
-	border-radius: 25px;
-    color: black;
+	background-color: rgb(255,153,72);
+	border-radius: 4px;
+    color: white;
     padding: 7px 10px;
     text-align: center;
     display: inline-block;
@@ -276,9 +278,9 @@ input[type=text], select {
 }
 
 .no-button {
-	background-color: white;
-	border-radius: 25px;
-    color: black;
+	background-color: rgb(255,153,72);
+	border-radius: 4px;
+    color: white;
     padding: 7px 10px;
     text-align: center;
     display: inline-block;
@@ -354,11 +356,13 @@ input[type=text], select {
 }
 
 .button-container {
-	position: relative;
+	position: fixed;
+	bottom: 0;
+	width: 89vw;
 }
 
 .locations-list {
-	height: calc(100vh - 36vh);
+	height: calc(100vh - 32vh);
 }
 
 .loc-button {
@@ -390,7 +394,7 @@ input[type=text], select {
 
 .back-button {
 	background-color: white;
-	border-radius: 25px;
+	border-radius: 4px;
     color: black;
     padding: 7px 10px;
     text-align: center;
@@ -527,5 +531,5 @@ input[type=text], select {
 }
 
 .button-buffer {
-	height: 65vh;
+	height: 68vh;
 }

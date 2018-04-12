@@ -163,14 +163,13 @@ $(document).on('pageshow', '#currentLocation', function()
 	}
 
 	$('.back-button').on("click", function(event){
-		$('#loc1').hide();
-		$('#loc2').hide();	
-		$('#loc3').hide();
-		$('#loc4').hide();
+		// $('#loc1').hide();
+		// $('#loc2').hide();	
+		// $('#loc3').hide();
+		// $('#loc4').hide();
 		window.location = 'index.html#locations';
 		state = 0;
 	});
-
 });
 
 $('#addNewLocation').on("click", function(event){
@@ -178,14 +177,14 @@ $('#addNewLocation').on("click", function(event){
 });
 
 $('.yes-button').on("click", function(event){
-	$('.popup').fadeOut('slow');
+	$('.popup').slideUp();
 	userResponse = 1;
 	setRating = true;
 	getUserAnswer();
 });
 
 $('.no-button').on("click", function(event){
-	$('.popup').fadeOut('slow');
+	$('.popup').slideUp();
 	userResponse = 2;
 	setRating = true;
 	getUserAnswer();
@@ -213,21 +212,25 @@ $(document).on('pageshow', '#locations', function()
 
 	console.log(locationArray);
 
-	if(locationArray[0] != "")
+	if(locationArray[0] != "" && locationArray.length >= 1)
 	{
 		$('#loc1').html(locationArray[0]);
+		$('#loc1').fadeIn('slow');
 	}
-	if(locationArray[1] != "")
+	if(locationArray[1] != "" && locationArray.length >= 2)
 	{
 		$('#loc2').html(locationArray[1]);
+		$('#loc2').fadeIn('slow');
 	}
-	if(locationArray[2] != "")
+	if(locationArray[2] != "" && locationArray.length >= 3)
 	{
 		$('#loc3').html(locationArray[2]);
+		$('#loc3').fadeIn('slow');
 	}
-	if(locationArray[3] != "")
+	if(locationArray[3] != "" && locationArray.length >= 4)
 	{
 		$('#loc4').html(locationArray[3]);
+		$('#loc4').fadeIn('slow');
 	}
 
 	$('#loc1').on('click', function(event) {
@@ -480,6 +483,10 @@ function postUserAnswer()
 
 function getCurrentLocationName()
 {
+
+	$('.CurrentLocTitle').html("Getting Your Location...");
+	$('.CurrentLocTitle').fadeIn('slow');
+
 	navigator.geolocation.getCurrentPosition(function(pos){
 		var lat = pos.coords.latitude;
 		var long = pos.coords.longitude;
@@ -491,30 +498,12 @@ function getCurrentLocationName()
 			async: 'true',
 			dataType: 'json',
 			beforeSend: function() {
-				$('.CurrentLocTitle').hide();
 			},
 			complete: function(data) {
 				$.mobile.loading('hide');
 			},
 			success: function(result) {
 				$('.CurrentLocTitle').html(result.location.name);
-				$('.CurrentLocTitle').fadeIn('slow');
-				if(locationArray.length >= 1)
-				{
-					$('#loc1').fadeIn('slow');
-				}
-				if(locationArray.length >= 2)
-				{
-					$('#loc2').fadeIn('slow');
-				}
-				if(locationArray.length >= 3)
-				{
-					$('#loc3').fadeIn('slow');
-				}
-				if(locationArray.length >= 4)
-				{
-					$('#loc4').fadeIn('slow');
-				}
 			}
 		});
 	});
@@ -620,7 +609,7 @@ function displayCurrentWeatherData(data)
 	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
 	$('.weather-icon').html(FigureOutIconType(data, 0));
 
-	if(data.current.condition.text.includes("rain") || data.current.condition.text.includes("snow"))
+	if(data.current.condition.text.includes("rain") || (data.current.condition.text.includes("drizzle")))
 	{
 		console.log("It is raining currently!");
 
@@ -628,7 +617,7 @@ function displayCurrentWeatherData(data)
 		if(!hasResponded && state == 1)
 		{
 			updateCommunityRatings();
-			$(".popup").fadeIn('slow');
+			$(".popup").slideDown();
 			$('.community-ratings').fadeIn('slow');
 		}
 		else if(hasResponded && state == 1)
