@@ -84,6 +84,29 @@ function innit() {
 	$('.day2').hide();
 	$('.day3').hide();
 	$('.back-button').hide();
+
+	getCurrentLocationName();
+
+	if(locationArray[0] != "" && locationArray.length >= 1)
+	{
+		$('#loc1').html(locationArray[0]);
+		$('#loc1').fadeIn('slow');
+	}
+	if(locationArray[1] != "" && locationArray.length >= 2)
+	{
+		$('#loc2').html(locationArray[1]);
+		$('#loc2').fadeIn('slow');
+	}
+	if(locationArray[2] != "" && locationArray.length >= 3)
+	{
+		$('#loc3').html(locationArray[2]);
+		$('#loc3').fadeIn('slow');
+	}
+	if(locationArray[3] != "" && locationArray.length >= 4)
+	{
+		$('#loc4').html(locationArray[3]);
+		$('#loc4').fadeIn('slow');
+	}
 }
 
 owl.on('changed.owl.carousel', function(event) {
