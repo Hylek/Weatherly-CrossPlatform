@@ -631,6 +631,11 @@ function displayCurrentWeatherData(data)
 			$(".popup").fadeIn('slow');
 			$('.community-ratings').fadeIn('slow');
 		}
+		else if(hasResponded && state == 1)
+		{
+			updateCommunityRatings();
+			$('.community-ratings').fadeIn('slow');
+		}
 	}
 	else{
 		$('.community-ratings').fadeOut('slow');

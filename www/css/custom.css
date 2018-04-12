@@ -73,7 +73,7 @@ display: block;
 }
 
 .customButton {
-    background-color: rgb(255,153,72); /* Green */
+    background-color: rgb(255,153,72);
     border: none;
     color: white;
     padding: 15px 32px;
@@ -247,7 +247,7 @@ input[type=text], select {
 	padding-top: 3vh;
 	font-family: mont-light;
 	color: white;
-	font-size: 24px;
+	font-size: 18px;
 	text-align: center;
 }
 
@@ -353,8 +353,12 @@ input[type=text], select {
 	grid-template-columns: 5% 90% 5%;
 }
 
+.button-container {
+	position: relative;
+}
+
 .locations-list {
-	height: calc(100vh - 32vh);
+	height: calc(100vh - 36vh);
 }
 
 .loc-button {
@@ -523,5 +527,5 @@ input[type=text], select {
 }
 
 .button-buffer {
-	height: 72vh;
+	height: 65vh;
 }
