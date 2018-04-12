@@ -11,10 +11,14 @@ var locationArray = [];
 var userResponse;
 var yesRatings;
 var noRatings;
+var ratingLocation;
 var setRating;
 var hasResponded;
+var isAddedLocation = false;
 var gotName = 0;
 var locationToDelete = "";
+
+var showTutorial = false;
 
 function onDeviceReady()
 {
@@ -31,6 +35,9 @@ $(document).ready(function()
 var owl = $('.owl-carousel');
 
 function innit() {
+	document.addEventListener("online", onOnline, false);
+	document.addEventListener("offline", onOffline, false);
+
 	$('.CurrentLocTitle').hide();	
 	$('#loc1').hide();
 	$('#loc2').hide();
@@ -38,8 +45,8 @@ function innit() {
 	$('#loc4').hide();
 	$('.popup').hide();
 	$('.community-ratings').hide();
-	document.addEventListener("online", onOnline, false);
-	document.addEventListener("offline", onOffline, false);
+
+	checkTutorial();
 
 	getUserAnswer();
 
@@ -64,11 +71,9 @@ function innit() {
 		$('body').addClass('offline');
 	}
 
-	$('.section-1').hide();
 	$('.today').hide();
 	$('.current-location-name').hide();
 	$('.time-stamp').hide();
-	$('.current-temp').hide();
 	$('.current-cond').hide();
 	$('.feels-like').hide();
 	$('.today').hide();
@@ -109,6 +114,66 @@ function innit() {
 	}
 }
 
+function checkTutorial()
+{
+	var tutorialStatus = localStorage.getItem("tutorialState");
+	console.log("Checking tutorial status... " + tutorialStatus);
+	if(tutorialStatus == null || tutorialStatus == "")
+	{
+		// Do tutorial
+		console.log("Showing tutorial");
+		showTutorial = true;
+		window.location = 'index.html#tutorial-page-1';
+	}
+	if(tutorialStatus == 1)
+	{
+		// Tutorial is complete, skip it
+		showTutorial = false;
+	}
+}
+
+$(document).on('pageshow', '#tutorial-page-1', function()
+{
+	console.log("Showing tutorial page!");
+	if(showTutorial)
+	{
+			$('.tutorial-title-1').html("Welcome to Weatherly");
+			$('.tutorial-content-1').html("Weatherly is a community weather app that uses you, the user, to provide more accurate information on current weather at your location.<br><br> When there is adverse weather conditions at your present location, weatherly will ask you in the app if that weather is actually affecting your location.<br><br> You will then be able to see other people's responses to this location and other responses in different locations that you have added.");
+			
+			$('#tutorialButton-1').on('click', function(){
+				console.log("Going to tutorial page 2!");
+				window.location = 'index.html#tutorial-page-2';
+				$('.tutorial-title-2').html("Required Permissions");
+				$('.tutorial-content-2').html("This app requires your device location in order to provide you with weather updates.<br><br> If you do not consent to this permission, please stop using this app now.");
+			});
+		}
+		if(!showTutorial)
+		{
+			window.location = 'index.html#locations';
+		}
+});
+
+$(document).on('pageshow', '#tutorial-page-2', function()
+{
+	console.log("Showing 2nd tutorial page");
+	$('#tutorialButton-2').on('click', function(){
+		$('.tutorial-title-3').html("Things to know!");
+		$('.tutorial-content-3').html("The first red item in the list is your CURRENT location, this will change as you move around!<br><br> Any added locations in orange can be deleted by simply tapping and holding for a few seconds!<br><br> And that's all you need to know! Tap the button below to get started!");
+		console.log("Going to tutorial page 3!");
+		window.location = 'index.html#tutorial-page-3';
+	});
+});
+
+$(document).on('pageshow', '#tutorial-page-3', function()
+{
+	console.log("Showing final tutorial page");
+	$('#tutorialButton-3').on('click', function(){
+		console.log("Going into the app!");
+		localStorage.setItem("tutorialState", 1);
+		window.location = 'index.html#locations';
+	});
+});
+
 owl.on('changed.owl.carousel', function(event) {
 	if(event.page.index == 3)
 	{
@@ -145,7 +210,6 @@ $(document).on('pageshow', '#addLocation', function()
 		}
 
 		console.log(locationArray);
-		$('.section-1').hide();
 		window.location = 'index.html#currentLocation';
 		console.log(state);
 		restoreBuffers();
@@ -158,12 +222,10 @@ $(document).on('pageshow', '#currentLocation', function()
 
 	if(state == 1)
 	{
-		$('.section-1').hide();
 		getWeather();
 	}
 	if(state == 2)
 	{
-		$('.section-1').hide();
 		getWeatherViaCity();
 	}
 
@@ -214,13 +276,11 @@ $('.no-button').on("click", function(event){
 });
 
 $('.currentLocationItem').on('click', function(event){
-	$('.section-1').hide();
 	window.location = 'index.html#currentLocation';
 	state = 1;
 });
 
 $('.CurrentLocTitle').on('click', function(event){
-	$('.section-1').hide();
 	state = 1;
 	window.location = 'index.html#currentLocation';
 });
@@ -228,7 +288,7 @@ $('.CurrentLocTitle').on('click', function(event){
 $(document).on('pageshow', '#locations', function()
 {
 	console.log("SHOWED PAGE");
-
+	clearPageData();
 	getCurrentLocationName();
 
 	loadData();
@@ -257,30 +317,49 @@ $(document).on('pageshow', '#locations', function()
 	}
 
 	$('#loc1').on('click', function(event) {
-		$('.section-1').hide();
 		input = locationArray[0];
 		state = 2;
 		window.location = 'index.html#currentLocation';
 	});
 	$('#loc2').on('click', function(event) {
-		$('.section-1').hide();
 		input = locationArray[1];
 		state = 2;
 		window.location = 'index.html#currentLocation';
 	});
 	$('#loc3').on('click', function(event) {
-		$('.section-1').hide();
 		input = locationArray[2];
 		state = 2;
 		window.location = 'index.html#currentLocation';
 	});
 	$('#loc4').on('click', function(event) {
-		$('.section-1').hide();
 		input = locationArray[3];
 		state = 2;
 		window.location = 'index.html#currentLocation';
 	});
 });
+
+function clearPageData()
+{
+	$('.current-temp').html("Loading!");
+	$('.today').hide();
+	$('.current-location-name').hide();
+	$('.time-stamp').hide();
+	$('.current-cond').hide();
+	$('.feels-like').hide();
+	$('.today').hide();
+	$('.weekly-temp-tomorrow').hide();
+	$('.weekly-icon-tomorrow').hide();
+	$('.tomorrow').hide();
+	$('.refresh').hide();
+	$('.weather-icon').hide();
+	$('.weekly-temp-day2').hide();
+	$('.weekly-temp-day3').hide();
+	$('.weekly-icon-day2').hide();
+	$('.weekly-icon-day3').hide();
+	$('.day2').hide();
+	$('.day3').hide();
+	$('.back-button').hide();
+}
 
 function loadData()
 {
@@ -319,7 +398,6 @@ function getWeatherViaCity()
 		dataType: 'json',
 		beforeSend: function() {
 			//$.mobile.loading('show');
-			$('.section-1').fadeOut('slow');
 		},
 		complete: function(data) {
 			//$.mobile.loading('hide');
@@ -334,7 +412,6 @@ function getWeatherViaCity()
 			$('.current-cond').fadeIn('slow');
 			$('.feels-like').fadeIn('slow');
 			$('.today').fadeIn('slow');
-			$('.section-1').fadeIn('slow');
 			$('.refresh').fadeIn('slow');
 			$('.back-button').fadeIn('slow');
 		}	
@@ -354,7 +431,6 @@ function getWeatherViaCity()
 			$('.weekly-temp-day3').hide();
 		},
 		complete: function(data) {
-			//$.mobile.loading('hide');
 		},
 		success: function(result) {
 			displayForecastedWeatherData(result);
@@ -396,12 +472,12 @@ function getWeather()
 			dataType: 'json',
 			beforeSend: function() {
 				$.mobile.loading('show');
-				$('.section-1').fadeOut('slow');
 			},
 			complete: function(data) {
 				$.mobile.loading('hide');
 			},
 			success: function(result) {
+				console.log("Got current location's weather data!");
 				displayCurrentWeatherData(result);
 				
 				$('.current-location-name').fadeIn('slow');
@@ -413,7 +489,6 @@ function getWeather()
 				$('.refresh').fadeIn('slow');
 				$('.weather-icon').fadeIn('slow');
 				$('.back-button').fadeIn('slow');
-				$('.section-1').fadeIn('slow');
 			}
 		});
 
@@ -450,6 +525,27 @@ function getWeather()
 	});
 }
 
+function getUserData()
+{
+	$.ajax({
+		url: 'https://secret-meadow-93624.herokuapp.com/ratings',
+		type: 'GET',
+		async: 'true',
+		dataType: 'json',
+		success: function(result) {
+			ratingLocation = result[0].location;
+			console.log("CUSTOM API LOCATION: " + ratingLocation);
+			yesRatings = result[0].yes;
+			noRatings = result[0].no;
+
+			if(ratingLocation == input)
+			{
+				isAddedLocation = true;
+			}
+		}
+	});
+}
+
 function getUserAnswer()
 {
 	$.ajax({
@@ -459,6 +555,8 @@ function getUserAnswer()
 		dataType: 'json',
 		success: function(result) {
 			//console.log(ratings[0].yes);
+			ratingLocation = result[0].location;
+			console.log("CUSTOM API LOCATION: " + ratingLocation);
 			yesRatings = result[0].yes;
 			noRatings = result[0].no;
 			if(setRating)
@@ -635,18 +733,25 @@ function displayCurrentWeatherData(data)
 	if(data.current.condition.text.includes("rain") || (data.current.condition.text.includes("drizzle")))
 	{
 		console.log("It is raining currently!");
+		console.log("Current location: " + data.location.name);
 
 		// Fadein popup asking if it is actually raining!
-		if(!hasResponded && state == 1)
+		if(!hasResponded || isAddedLocation && state == 1)
 		{
-			updateCommunityRatings();
-			$(".popup").slideDown();
-			$('.community-ratings').fadeIn('slow');
+			if(data.location.name.includes(ratingLocation))
+			{
+				updateCommunityRatings();
+				$(".popup").slideDown();
+				$('.community-ratings').fadeIn('slow');
+			}
 		}
-		else if(hasResponded && state == 1)
+		else if(hasResponded && state == 1 && data.location.name === ratingLocation)
 		{
-			updateCommunityRatings();
-			$('.community-ratings').fadeIn('slow');
+			if(data.location.name.includes(ratingLocation))
+			{
+				updateCommunityRatings();
+				$('.community-ratings').fadeIn('slow');
+			}
 		}
 	}
 	else{
@@ -749,23 +854,3 @@ function onOnline()
 	$('body').addClass('online');
 	$('body').removeClass('offline');
 }
-
-$(document).on("pagebeforeshow", function () {
-	// When entering pagetwo
-	//alert("page is about to be shown");
-
-});
-
-$(document).on("pagecontainershow", function () {
-	// When entering pagetwo
-
-});
-
-$(document).on("pagecontainerload", function (event, data) {
-	//alert("pageload event fired!");
-});
-
-$(document).on('pagecreate', '#menu', function () {
-	console.log("pagecreate menu");
-
-});

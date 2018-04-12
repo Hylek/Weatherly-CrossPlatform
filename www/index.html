@@ -11,16 +11,12 @@
 <!--You need this although you do not need a physical reference as build will inject it in-->
 <script type="text/javascript" src="cordova.js"></script>
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css" />
-<link rel="stylesheet" href="css/jquery.bxslider.css" />
 <link rel="stylesheet" href="css/custom.css" />
-<link rel="stylesheet" href="css/owl.carousel.min.css" />
-<link rel="stylesheet" href="css/owl.theme.defualt.min.css" />
 
 </head>
 
 <!--notice i have added the class online which will change based on our online listeners-->
 <body class="online">
-
 
 <!--note this is outside of the page role so will never get removed and is always accessible-->
 <div id="offline" class="fixed">
@@ -29,39 +25,10 @@
 </div>
 <!--end offline display-->
 
-<!-- <div data-role="page" id="tutorial" data-theme="a">
-    <div class="owl-carousel">
-      <div class ="owl-content">
-        <h1>Welcome</h1>
-        <h2>To</h2>
-        <h1>Weatherly</h1>
-        <div class="owl-footer">
-          <h3>SWIPE TO CONTINUE</h3>
-        </div>
-      </div>
-
-      <div class ="owl-content">
-        <h1>Permissions</h1>
-        <p class="owl-body">IN ORDER TO FUNCTION PROPERLY, THIS APP WILL USE YOUR COARSE LOCATION TO OBTAIN YOUR GENERAL AREA.</p>
-        <div class="owl-footer">
-          <h3>SWIPE TO CONTINUE</h3>
-        </div>
-      </div>
-      <div class ="owl-content">
-        <h1>Do ya like jazz?</h1>
-        <div class="owl-footer">
-          <h3>SWIPE TO CONTINUE</h3>
-        </div>
-      </div>
-      <div></div>
-    </div>
-</div> -->
-
 <div data-role="page" id="locations" data-theme="a">
   <div class="section-1-locations">
     <div class="container-1">
       <div class="page-title">Your Locations</div>
-      <!-- <div class="refresh"><input type="image" src="img/refresh-icon.png" class="refresh-button" id="refresh-weather"/></div> -->
     </div>
     <div class="list-buffer"></div>
     <div class="locations-list">
@@ -74,14 +41,35 @@
       </ul>
       <div class="button-container" data-role="content">
         <button type="button" class="customButton" id="addNewLocation" data-role="none">Add a New Location</button>
-        <!-- <div></div>
-        <div class="add-button">ADD LOCATION<a href="#"><span class="backspan"></span></a></div>
-        <div></div> -->
         </div>
     </div>
     </div>
   </div>
 </div>
+<div data-role="page" id="tutorial-page-1" data-theme="a">
+    <div class="tutorial-title-1"></div>
+    <div class="tutorial-title-buffer"></div>
+    <div class="tutorial-content-1"></div>
+    <div class="button-container" data-role="content">
+      <button type="button" class="customButton" id="tutorialButton-1" data-role="none">Next</button>
+    </div>
+  </div>
+  <div data-role="page" id="tutorial-page-2" data-theme="a">
+      <div class="tutorial-title-2"></div>
+      <div class="tutorial-title-buffer"></div>
+      <div class="tutorial-content-2"></div>
+      <div class="button-container" data-role="content">
+        <button type="button" class="customButton" id="tutorialButton-2" data-role="none">Next</button>
+      </div>
+    </div>
+    <div data-role="page" id="tutorial-page-3" data-theme="a">
+        <div class="tutorial-title-3"></div>
+        <div class="tutorial-title-buffer"></div>
+        <div class="tutorial-content-3"></div>
+        <div class="button-container" data-role="content">
+          <button type="button" class="customButton" id="tutorialButton-3" data-role="none">Start App!</button>
+        </div>
+      </div>
 
 <div data-role="page" id="addLocation" data-theme="a">
   <div data-role="content">
@@ -94,18 +82,17 @@
   </div>
 </div>
 
-
         <div data-role="page" id="currentLocation" data-theme="a">
           <div class="section-1">
             <div class="container-1">
               <div class="current-location-name"></div>
-              <div class="refresh"><input type="image" src="img/location-refresh.png" height="42" width="42" class="refresh-button" id="refresh-weather" /></div>
+              <div class="refresh"><input type="image" src="img/location-refresh.png" height="32" width="32" class="refresh-button" id="refresh-weather" /></div>
             </div>
             <div class="container-2">
               <div class="today">TODAY</div>
               <div class="icon-buffer"></div>
               <div class="weather-icon"></div>
-              <div class="current-temp"></div>
+              <div class="current-temp">Loading!</div>
               <div class="current-cond"></div>
               <div class="community-ratings"></div>
             </div>
