@@ -345,6 +345,7 @@ function clearPageData()
 	$('.current-location-name').hide();
 	$('.time-stamp').hide();
 	$('.current-cond').hide();
+	$('.community-ratings').hide();
 	$('.feels-like').hide();
 	$('.today').hide();
 	$('.weekly-temp-tomorrow').hide();
@@ -599,12 +600,12 @@ function postUserAnswer()
 		});
 		userResponse = 0;
 		hasResponded = true;
+		updateCommunityRatings();
 	}
 }
 
 function getCurrentLocationName()
 {
-
 	$('.CurrentLocTitle').html("Getting Your Location...");
 	$('.CurrentLocTitle').fadeIn('slow');
 
@@ -730,33 +731,32 @@ function displayCurrentWeatherData(data)
 	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
 	$('.weather-icon').html(FigureOutIconType(data, 0));
 
-	if(data.current.condition.text.includes("rain") || (data.current.condition.text.includes("drizzle")))
-	{
-		console.log("It is raining currently!");
+		//console.log("It is raining currently!");
 		console.log("Current location: " + data.location.name);
 
 		// Fadein popup asking if it is actually raining!
 		if(!hasResponded || isAddedLocation && state == 1)
 		{
-			if(data.location.name.includes(ratingLocation))
-			{
-				updateCommunityRatings();
-				$(".popup").slideDown();
-				$('.community-ratings').fadeIn('slow');
-			}
+			updateCommunityRatings();
+			$(".popup").slideDown();
+			$('.community-ratings').fadeIn('slow');
+
+			// if(data.location.name.includes(ratingLocation))
+			// {
+			// }
 		}
-		else if(hasResponded && state == 1 && data.location.name === ratingLocation)
+		else if(hasResponded && state == 1 /* && data.location.name === ratingLocation */)
 		{
-			if(data.location.name.includes(ratingLocation))
-			{
+			console.log("Response has already been taken!");
+			// if(data.location.name.includes(ratingLocation))
+			// {
 				updateCommunityRatings();
 				$('.community-ratings').fadeIn('slow');
-			}
+			// }
 		}
-	}
-	else{
-		$('.community-ratings').fadeOut('slow');
-	}
+	// else{
+	// 	$('.community-ratings').fadeOut('slow');
+	// }
 }
 
 function displayData(data)
