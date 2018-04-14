@@ -14,6 +14,9 @@ display: block;
 	padding: 30px;
 	box-sizing: border-box;
 	top: 0px;
+	font-family: mont-light;
+	text-align: center;
+	opacity: 0.9;
 }
 
 @font-face {
@@ -40,6 +43,28 @@ display: block;
 	display: grid;
 	grid-template-columns: 70% 15% 15%;
 	height: 5vh;
+}
+
+.location-permission {
+	position: fixed;
+	background-color: white;
+	top: 30vh;
+	width: 75vw;
+	height: 30vh;
+	left: 13vw;
+	text-align: center;
+	font-family: mont-med;
+	border: 3px solid black;
+}
+
+.permission-buffer {
+	height: 17vh;
+}
+
+.permission-footer {
+	bottom: 0;
+	display: grid;
+	grid-template-columns: 5% 30% 30% 30% 5%;
 }
 
 .weekly-temp-tomorrow {
@@ -319,6 +344,36 @@ input[type=text], select {
 	bottom: 0;
 	display: grid;
 	grid-template-columns: 5% 30% 30% 30% 5%;
+}
+
+.allow-button {
+	background-color: white;
+	border-radius: 4px;
+    color: black;
+    padding: 7px 10px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+	cursor: pointer;
+	font-family: mont-med;
+	text-decoration: none;
+	text-shadow: none;
+}
+
+.decline-button {
+	background-color: white;
+	border-radius: 4px;
+    color: black;
+    padding: 7px 10px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+	cursor: pointer;
+	font-family: mont-med;
+	text-decoration: none;
+	text-shadow: none;
 }
 
 .yes-button {

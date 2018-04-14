@@ -18,6 +18,8 @@ var isAddedLocation = false;
 var gotName = 0;
 var locationToDelete = "";
 var currentLocationName;
+var currentLocationID;
+var allowedLocation = false;
 
 var showTutorial = false;
 
@@ -39,6 +41,7 @@ function innit() {
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
+
 	$('.CurrentLocTitle').hide();	
 	$('#loc1').hide();
 	$('#loc2').hide();
@@ -46,6 +49,8 @@ function innit() {
 	$('#loc4').hide();
 	$('.popup').hide();
 	$('.community-ratings').hide();
+
+	localStorage.clear();
 
 	checkTutorial();
 
@@ -91,7 +96,10 @@ function innit() {
 	$('.day3').hide();
 	$('.back-button').hide();
 
-	getCurrentLocationName();
+	if(localStorage.getItem("tutorialState") == 1)
+	{
+		getCurrentLocationName();
+	}
 
 	if(locationArray[0] != "" && locationArray.length >= 1)
 	{
@@ -138,6 +146,8 @@ $(document).on('pageshow', '#tutorial-page-1', function()
 	console.log("Showing tutorial page!");
 	if(showTutorial)
 	{
+		$('#tutorialButton-2').attr("disabled", true);
+		$('.location-permission').hide();
 			$('.tutorial-title-1').html("Welcome to Weatherly");
 			$('.tutorial-content-1').html("Weatherly is a community weather app that uses you, the user, to provide more accurate information on current weather at your location.<br><br> When there is adverse weather conditions at your present location, weatherly will ask you in the app if that weather is actually affecting your location.<br><br> You will then be able to see other people's responses to this location and other responses in different locations that you have added.");
 			
@@ -154,9 +164,24 @@ $(document).on('pageshow', '#tutorial-page-1', function()
 		}
 });
 
+$('.allow-button').on('click', function(){
+	$('.location-permission').slideUp();
+	allowedLocation = true;
+	$('#tutorialButton-2').attr("disabled", false);
+});
+
+$('.decline-button').on('click', function(){
+	alert("This app cannot function without this permission.");
+	allowedLocation = false;
+	window.close();
+	self.close();
+});
+
 $(document).on('pageshow', '#tutorial-page-2', function()
 {
+	$('.location-permission').slideDown();
 	console.log("Showing 2nd tutorial page");
+
 	$('#tutorialButton-2').on('click', function(){
 		$('.tutorial-title-3').html("Things to know!");
 		$('.tutorial-content-3').html("The first red item in the list is your CURRENT location, this will change as you move around!<br><br> Any added locations in orange can be deleted by simply tapping and holding for a few seconds!<br><br> And that's all you need to know! Tap the button below to get started!");
@@ -299,13 +324,16 @@ $('.CurrentLocTitle').on('click', function(event){
 
 $(document).on('pageshow', '#locations', function()
 {
-	console.log("SHOWED PAGE");
-	clearPageData();
-	getCurrentLocationName();
-
-	loadData();
-
-	console.log(locationArray);
+	if(localStorage.getItem("tutorialState") == 1)
+	{
+		console.log("SHOWED PAGE");
+		clearPageData();
+		getCurrentLocationName();
+	
+		loadData();
+	
+		console.log(locationArray);
+	}
 
 	if(locationArray[0] != "" && locationArray.length >= 1)
 	{
@@ -598,6 +626,9 @@ function getUserAnswer()
 					console.log("CUSTOM API LOCATION: " + ratingLocation);
 					yesRatings = result[i].yes;
 					noRatings = result[i].no;
+					currentLocationID = result[i].id;
+					console.log("Country ID: " + currentLocationID);
+
 					$('.community-ratings').fadeIn('slow');
 					updateCommunityRatings();
 				}
@@ -626,7 +657,7 @@ function postUserAnswer(result)
 	if(userResponse == 1)
 	{
 		$.ajax({
-			url: 'https://secret-meadow-93624.herokuapp.com/ratings/5ac6ab40d3ebac00147e9aa3',
+			url: 'https://secret-meadow-93624.herokuapp.com/ratings/' + currentLocationID,
 			type: 'PUT',
 			async: 'true',
 			data: {
@@ -642,7 +673,7 @@ function postUserAnswer(result)
 	if(userResponse == 2)
 	{
 		$.ajax({
-			url: 'https://secret-meadow-93624.herokuapp.com/ratings/5ac6ab40d3ebac00147e9aa3',
+			url: 'https://secret-meadow-93624.herokuapp.com/ratings/' + currentLocationID,
 			type: 'PUT',
 			async: 'true',
 			data: {
@@ -849,7 +880,7 @@ function FigureOutIconType(data, day)
 		{
 			return "D";
 		}
-		if(weather.includes("OverCast"))
+		if(weather.includes("Overcast"))
 		{
 			return "C";
 		}
@@ -861,6 +892,11 @@ function FigureOutIconType(data, day)
 		{
 			return "E";
 		}
+		if(weather.includes("Clear"))
+		{
+			return "B";
+		}
+
 	}
 	else
 	{
@@ -877,7 +913,7 @@ function FigureOutIconType(data, day)
 		{
 			return "D";
 		}
-		if(weather.includes("OverCast"))
+		if(weather.includes("Overcast"))
 		{
 			return "C";
 		}
@@ -889,6 +925,10 @@ function FigureOutIconType(data, day)
 		{
 			return "E";
 		}
+		if(weather.includes("Clear"))
+		{
+			return "B";
+		}
 	}
 }
 
@@ -896,8 +936,8 @@ function FigureOutIconType(data, day)
 
 function onOffline()
 {
-	$('body').addClass('online');
-	$('body').removeClass('offline');
+	$('body').removeClass('online');
+	$('body').addClass('offline');
 }
 function onOnline()
 {
