@@ -428,7 +428,7 @@ function getWeatherViaCity()
 			$('.today').fadeIn('slow');
 			$('.refresh').fadeIn('slow');
 			$('.back-button').fadeIn('slow');
-			$('.community-ratings').fadeIn('slow');
+			//$('.community-ratings').fadeIn('slow');
 
 		}	
 	});
@@ -558,6 +558,11 @@ function getUserData()
 				{
 					console.log("Got the right location!");
 				}
+				else if(result[i].location != currentLocationName)
+				{
+					console.log("Location not found in Custom API");
+					$('.community-ratings').hide();
+				}
 			}
 
 			ratingLocation = result[0].location;
@@ -581,10 +586,11 @@ function getUserAnswer()
 		async: 'true',
 		dataType: 'json',
 		success: function(result) {
+			console.log("Location to check for ratings: " + currentLocationName);
 			for(var i = 0; i < result.length; i++)
 			{
-				console.log("JSON Count: " + i);
-				console.log(currentLocationName);
+				// console.log("JSON Count: " + i);
+				// console.log(currentLocationName);
 				if(result[i].location == currentLocationName)
 				{
 					console.log("Got the right location!");
@@ -592,8 +598,19 @@ function getUserAnswer()
 					console.log("CUSTOM API LOCATION: " + ratingLocation);
 					yesRatings = result[i].yes;
 					noRatings = result[i].no;
+					$('.community-ratings').fadeIn('slow');
 					updateCommunityRatings();
 				}
+				else{
+					console.log("Didn't find anything!");
+					//$('community-ratings').fadeOut('fast');
+				}
+
+				// else if(result[i].location != currentLocationName)
+				// {
+				// 	console.log("Location not found in Custom API");
+				// 	$('.community-ratings').hide();
+				// }
 			}
 			if(setRating)
 			{
@@ -737,7 +754,7 @@ function restoreBuffers()
 
 function updateCommunityRatings() 
 {
-	$('.community-ratings').html( "Community Report on Rain<br>" + "Yes: " + yesRatings + " No: " + noRatings);	
+	$('.community-ratings').html( "Community Report<br>" + "Rain: " + yesRatings + " Dry: " + noRatings);	
 }
 
 function displayForecastedWeatherData(data)
