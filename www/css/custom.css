@@ -315,7 +315,7 @@ input[type=text], select {
 	height: 15vh;
 }
 
-.popup-footer {
+.popup-footer{
 	bottom: 0;
 	display: grid;
 	grid-template-columns: 5% 30% 30% 30% 5%;

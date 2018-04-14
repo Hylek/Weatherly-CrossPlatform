@@ -17,6 +17,7 @@ var hasResponded;
 var isAddedLocation = false;
 var gotName = 0;
 var locationToDelete = "";
+var currentLocationName;
 
 var showTutorial = false;
 
@@ -48,7 +49,7 @@ function innit() {
 
 	checkTutorial();
 
-	getUserAnswer();
+	//getUserAnswer();
 
 	if(locationArray == null)
 	{
@@ -232,12 +233,12 @@ $(document).on('pageshow', '#currentLocation', function()
 	$('.refresh-button').on("click", function(event){
 		if(state == 1)
 		{
-			$('.section-1').hide();
+			clearPageData();
 			getWeather();
 		}
 		if(state == 2)
 		{
-			$('.section-1').hide();
+			clearPageData();
 			getWeatherViaCity();
 		}
 	});
@@ -248,10 +249,7 @@ $(document).on('pageshow', '#currentLocation', function()
 	}
 
 	$('.back-button').on("click", function(event){
-		// $('#loc1').hide();
-		// $('#loc2').hide();	
-		// $('#loc3').hide();
-		// $('#loc4').hide();
+		$('.popup').slideUp();
 		window.location = 'index.html#locations';
 		state = 0;
 	});
@@ -271,6 +269,20 @@ $('.yes-button').on("click", function(event){
 $('.no-button').on("click", function(event){
 	$('.popup').slideUp();
 	userResponse = 2;
+	setRating = true;
+	getUserAnswer();
+});
+
+$('#snow-button').on("click", function(event){
+	$('.popup').slideUp();
+	userResponse = 3;
+	setRating = true;
+	getUserAnswer();
+});
+
+$('#clear-button').on("click", function(event){
+	$('.popup').slideUp();
+	userResponse = 4;
 	setRating = true;
 	getUserAnswer();
 });
@@ -407,6 +419,7 @@ function getWeatherViaCity()
 			console.log("Got something!", result);
 			console.log(locationArray);
 			displayCurrentWeatherData(result);
+			getUserAnswer();
 			$('.current-location-name').fadeIn('slow');
 			$('.time-stamp').fadeIn('slow');
 			$('.current-temp').fadeIn('slow');
@@ -415,6 +428,8 @@ function getWeatherViaCity()
 			$('.today').fadeIn('slow');
 			$('.refresh').fadeIn('slow');
 			$('.back-button').fadeIn('slow');
+			$('.community-ratings').fadeIn('slow');
+
 		}	
 	});
 
@@ -478,8 +493,10 @@ function getWeather()
 				$.mobile.loading('hide');
 			},
 			success: function(result) {
+				currentLocationName = result.location.name;
 				console.log("Got current location's weather data!");
 				displayCurrentWeatherData(result);
+				getUserAnswer();
 				
 				$('.current-location-name').fadeIn('slow');
 				$('.time-stamp').fadeIn('slow');
@@ -534,6 +551,15 @@ function getUserData()
 		async: 'true',
 		dataType: 'json',
 		success: function(result) {
+			for(var i = 0; i < result.length; i++)
+			{
+				console.log("JSON Count: " + i);
+				if(result[i].location == currentLocationName)
+				{
+					console.log("Got the right location!");
+				}
+			}
+
 			ratingLocation = result[0].location;
 			console.log("CUSTOM API LOCATION: " + ratingLocation);
 			yesRatings = result[0].yes;
@@ -555,21 +581,30 @@ function getUserAnswer()
 		async: 'true',
 		dataType: 'json',
 		success: function(result) {
-			//console.log(ratings[0].yes);
-			ratingLocation = result[0].location;
-			console.log("CUSTOM API LOCATION: " + ratingLocation);
-			yesRatings = result[0].yes;
-			noRatings = result[0].no;
+			for(var i = 0; i < result.length; i++)
+			{
+				console.log("JSON Count: " + i);
+				console.log(currentLocationName);
+				if(result[i].location == currentLocationName)
+				{
+					console.log("Got the right location!");
+					ratingLocation = result[i].location;
+					console.log("CUSTOM API LOCATION: " + ratingLocation);
+					yesRatings = result[i].yes;
+					noRatings = result[i].no;
+					updateCommunityRatings();
+				}
+			}
 			if(setRating)
 			{
-				postUserAnswer();
+				postUserAnswer(result);
 				setRating = false;
 			}
 		}
 	});
 }
 
-function postUserAnswer()
+function postUserAnswer(result)
 {
 	if(userResponse == 1)
 	{
@@ -578,13 +613,14 @@ function postUserAnswer()
 			type: 'PUT',
 			async: 'true',
 			data: {
-				location: "Lincoln", // This will be data.location.name
+				location: ratingLocation,
 				yes: yesRatings = ++yesRatings,
 				no: noRatings
 			}
 		});
 		userResponse = 0;
 		hasResponded = true;
+		updateCommunityRatings();
 	}
 	if(userResponse == 2)
 	{
@@ -593,7 +629,7 @@ function postUserAnswer()
 			type: 'PUT',
 			async: 'true',
 			data: {
-				location: "Lincoln", // This will be data.location.name
+				location: ratingLocation, 
 				yes: yesRatings,
 				no: noRatings = ++noRatings
 			}
@@ -701,7 +737,7 @@ function restoreBuffers()
 
 function updateCommunityRatings() 
 {
-	$('.community-ratings').html("Yes: " + yesRatings + " No: " + noRatings);	
+	$('.community-ratings').html( "Community Report on Rain<br>" + "Yes: " + yesRatings + " No: " + noRatings);	
 }
 
 function displayForecastedWeatherData(data)
@@ -721,6 +757,7 @@ function displayForecastedWeatherData(data)
 
 function displayCurrentWeatherData(data)
 {
+	currentLocationName = data.location.name;
 	$('.current-location-name').html(data.location.name);
 	$('.current-location-name-small').html(data.location.name);
 	$('.current-location-name-list').html(data.location.name);
@@ -731,19 +768,15 @@ function displayCurrentWeatherData(data)
 	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
 	$('.weather-icon').html(FigureOutIconType(data, 0));
 
-		//console.log("It is raining currently!");
 		console.log("Current location: " + data.location.name);
 
-		// Fadein popup asking if it is actually raining!
-		if(!hasResponded || isAddedLocation && state == 1)
+		// Fadein popup asking for what the weather is really like!
+		if(!hasResponded && state == 1)
 		{
 			updateCommunityRatings();
 			$(".popup").slideDown();
 			$('.community-ratings').fadeIn('slow');
 
-			// if(data.location.name.includes(ratingLocation))
-			// {
-			// }
 		}
 		else if(hasResponded && state == 1 /* && data.location.name === ratingLocation */)
 		{
