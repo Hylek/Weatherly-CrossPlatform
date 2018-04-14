@@ -50,8 +50,6 @@ function innit() {
 	$('.popup').hide();
 	$('.community-ratings').hide();
 
-	localStorage.clear();
-
 	checkTutorial();
 
 	//getUserAnswer();

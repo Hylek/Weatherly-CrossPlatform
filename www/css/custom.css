@@ -58,13 +58,13 @@ display: block;
 }
 
 .permission-buffer {
-	height: 17vh;
+	height: 15vh;
 }
 
 .permission-footer {
 	bottom: 0;
 	display: grid;
-	grid-template-columns: 5% 30% 30% 30% 5%;
+	grid-template-columns: 5% 30% 30% 30% 10%;
 }
 
 .weekly-temp-tomorrow {
@@ -229,18 +229,6 @@ display: block;
 	height: 6vh;
 }
 
-.owl-content {
-	padding-left: 20px;
-	padding-top: 10px;
-	height: calc(100vh - 50vh);
-	background: beige;
-}
-
-.owl-footer {
-	text-align: left;
-	background: aquamarine;
-}
-
 /* Theme from https://www.w3schools.com/css/tryit.asp?filename=trycss_forms */
 input[type=text], select {
     width: 100%;
@@ -252,11 +240,6 @@ input[type=text], select {
     box-sizing: border-box;
 }
 
-.owl-carousel .owl-item{
-  /*background: black;*/
-  	height: calc(100vh - 5vh);
-	background: blue;
-}
 
 .location-name {
 	font-size: 32px;
@@ -265,7 +248,8 @@ input[type=text], select {
 
 .current-location-name {
 	font-size: 32px;
-	padding-left: 10px;
+	padding-left: 15px;
+	padding-top: 3vh;
 	font-family: mont-light;
 }
 
@@ -300,13 +284,15 @@ input[type=text], select {
 }
 
 .today {
-	padding-left: 10px;
+	padding-left: 15px;
+	padding-top: 1vh;
 	font-family: mont-med;
 }
 
 .refresh {
 	text-align: center;
 	padding-right: 1vh;
+	padding-top: 3vh;
 }
 
 .container-1 {
@@ -502,7 +488,7 @@ input[type=text], select {
 .page-title {
 	font-size: 32px;
 	padding-left: 15px;
-	padding-top: 15px;
+	padding-top: 5vh;
 	font-family: mont-light;
 	height: 10vh;
 }
@@ -617,10 +603,6 @@ input[type=text], select {
 	/* background-image: url(https://media.giphy.com/media/4Lr1TnWWfPwqs/giphy.gif); */
 }
 
-.owl-body {
-	font-size: 12px;
-}
-
 .feels-like {
 	font-size: 12px;
 	text-align: center;
@@ -648,5 +630,10 @@ input[type=text], select {
 }
 
 .button-buffer {
-	height: 68vh;
+	height: calc(100vh - 80vh);
 }
+
+.top-entry-buffer {
+	height: 30vh;
+}
+
