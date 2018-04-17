@@ -1,8 +1,18 @@
 @charset "UTF-8";
 
+body {
+	webkit-touch-callout: none;
+	-webkit-user-select: none; 
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none; 
+	user-select: none; 
+}
+
 body.online #offline{
 	display:none;
 }
+
 body.offline #offline{
 display: block;
 	width: 100vw;
