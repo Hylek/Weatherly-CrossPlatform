@@ -258,6 +258,7 @@ $(document).on('pageshow', '#currentLocation', function()
 		{
 			clearPageData();
 			getWeather();
+			console.log("Refresh current weather data!");
 		}
 		if(state == 2)
 		{
@@ -286,28 +287,14 @@ $('.yes-button').on("click", function(event){
 	$('.popup').slideUp();
 	userResponse = 1;
 	setRating = true;
-	getUserAnswer();
+	//getUserAnswer();
 });
 
 $('.no-button').on("click", function(event){
 	$('.popup').slideUp();
 	userResponse = 2;
 	setRating = true;
-	getUserAnswer();
-});
-
-$('#snow-button').on("click", function(event){
-	$('.popup').slideUp();
-	userResponse = 3;
-	setRating = true;
-	getUserAnswer();
-});
-
-$('#clear-button').on("click", function(event){
-	$('.popup').slideUp();
-	userResponse = 4;
-	setRating = true;
-	getUserAnswer();
+	//getUserAnswer();
 });
 
 $('.currentLocationItem').on('click', function(event){
@@ -520,7 +507,7 @@ function getWeather()
 			},
 			success: function(result) {
 				currentLocationName = result.location.name;
-				console.log("Got current location's weather data!");
+				console.log("Got current location's weather data! " + currentLocationName);
 				displayCurrentWeatherData(result);
 				getUserAnswer();
 				
@@ -614,6 +601,7 @@ function getUserAnswer()
 		dataType: 'json',
 		success: function(result) {
 			console.log("Location to check for ratings: " + currentLocationName);
+
 			for(var i = 0; i < result.length; i++)
 			{
 				// console.log("JSON Count: " + i);
@@ -630,8 +618,9 @@ function getUserAnswer()
 
 					$('.community-ratings').fadeIn('slow');
 					updateCommunityRatings();
+					break;
 				}
-				else{
+				else if(result[i].location != currentLocationName){
 					console.log("Didn't find anything!");
 
 					$('.community-ratings').fadeIn('slow');
