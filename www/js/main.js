@@ -854,7 +854,8 @@ function FigureOutDayOfWeek(data, day)
 	var weekDays = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
 
 	var date = days[day].date
-	var formattedDate = date.replace("-", ",").replace("-", ",");
+	//var formattedDate = date.replace("-", ",").replace("-", ",");
+	var formattedDate = date.replace(" ", "T");
 	var newDate = new Date(formattedDate);
 	return weekDays[newDate.getDay()];
 }

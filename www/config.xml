@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns   = "http://www.w3.org/ns/widgets"
     xmlns:gap   = "http://phonegap.com/ns/1.0"
-    id          = "com.adigitalengagement.locationtracker"
-    versionCode = "1"
-    version     = "1.0.1" >
+    id          = "com.danielcumbor.weatherly"
+    versionCode = "4"
+    version     = "1.1.1" >
     
     <!-- versionCode is optional and Android only -->
     <name>Weatherly</name>
