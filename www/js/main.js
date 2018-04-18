@@ -588,6 +588,7 @@ function getUserData()
 				{
 					console.log("Location not found in Custom API");
 					$('.community-ratings').hide();
+					noReportAvailable();
 				}
 			}
 
@@ -632,6 +633,9 @@ function getUserAnswer()
 				}
 				else{
 					console.log("Didn't find anything!");
+
+					$('.community-ratings').fadeIn('slow');
+					noReportAvailable();
 					//$('community-ratings').fadeOut('fast');
 				}
 
@@ -786,6 +790,11 @@ function updateCommunityRatings()
 	$('.community-ratings').html( "Community Report<br>" + "Rain: " + yesRatings + " Dry: " + noRatings);	
 }
 
+function noReportAvailable()
+{
+	$('.community-ratings').html( "Community Report<br>" + "No Community Report Available");	
+}
+
 function displayForecastedWeatherData(data)
 {
 	var days = data.forecast.forecastday;
@@ -895,7 +904,6 @@ function FigureOutIconType(data, day)
 		{
 			return "B";
 		}
-
 	}
 	else
 	{
