@@ -2,11 +2,11 @@
 
 body {
 	webkit-touch-callout: none;
-	-webkit-user-select: none; 
+	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
-	-ms-user-select: none; 
-	user-select: none; 
+	-ms-user-select: none;
+	user-select: none;
 }
 
 body.online #offline{
@@ -458,7 +458,7 @@ input[type=text], select {
 }
 
 .list-buffer {
-	height: 5vh; 
+	height: 5vh;
 }
 
 .loc-grid {
@@ -492,7 +492,7 @@ input[type=text], select {
 	text-decoration: none;
 	cursor: pointer;
 	text-align: left;
-	
+
 }
 
 .page-title {
@@ -646,4 +646,3 @@ input[type=text], select {
 .top-entry-buffer {
 	height: 30vh;
 }
-
