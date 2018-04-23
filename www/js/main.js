@@ -95,7 +95,7 @@ function innit() {
 	{
 		getCurrentLocationName();
 	}
-// If we have saved locations, fill them into the list
+	// If we have saved locations, fill them into the list
 	if(locationArray[0] != "" && locationArray.length >= 1)
 	{
 		$('#loc1').html(locationArray[0]);
@@ -136,6 +136,7 @@ function checkTutorial()
 	}
 }
 
+// If the user hasn't seen the tutorial before, then show all pages in sequence 
 $(document).on('pageshow', '#tutorial-page-1', function()
 {
 	console.log("Showing tutorial page!");
