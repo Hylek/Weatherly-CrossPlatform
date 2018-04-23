@@ -160,12 +160,14 @@ $(document).on('pageshow', '#tutorial-page-1', function()
 		}
 });
 
+// Allow button listener for permission popup in tutorial
 $('.allow-button').on('click', function(){
 	$('.location-permission').slideUp();
 	allowedLocation = true;
 	$('#tutorialButton-2').attr("disabled", false);
 });
 
+// Decline button listener for permission popup in tutorial
 $('.decline-button').on('click', function(){
 	alert("This app cannot function without this permission.");
 	allowedLocation = false;
@@ -173,6 +175,7 @@ $('.decline-button').on('click', function(){
 	self.close();
 });
 
+// Prep text when moving to tutorial page 2
 $(document).on('pageshow', '#tutorial-page-2', function()
 {
 	$('.location-permission').slideDown();
@@ -186,6 +189,7 @@ $(document).on('pageshow', '#tutorial-page-2', function()
 	});
 });
 
+// Prep text when moving to tutorial page 3
 $(document).on('pageshow', '#tutorial-page-3', function()
 {
 	console.log("Showing final tutorial page");
@@ -196,27 +200,24 @@ $(document).on('pageshow', '#tutorial-page-3', function()
 	});
 });
 
-owl.on('changed.owl.carousel', function(event) {
-	if(event.page.index == 3)
-	{
-		console.log("Loading locations page!");
-		window.location = 'index.html#locations';
-	}
-})
-
+// Handle input for field in add location page
 $(document).on('pageshow', '#addLocation', function()
 {
 	console.log("In Add Location!");
 
+	// When the add location button is clicked store field as input
 	$('#addLocationButton').on("click", function(event){
 		input = document.getElementById("locationSearch").value;
 		console.log("Input! " + input);
 		state = 2;
 
+		// If nothing is added inform the user
 		if(input == "" || input == null || input == " ")
 		{
 			alert("Please enter a location to continue!");
 		}
+
+		// If input isn't empty then add it to the array and save data to local storage
 		if(locationArray.length <= 3 && input != "" && input != " ")
 		{
 			if($.inArray(input, locationArray) < 0)
@@ -226,11 +227,13 @@ $(document).on('pageshow', '#addLocation', function()
 				console.log("Stored Locations! " + localStorage.getItem("locations"));
 			}
 		}
+		// If it has already been added do not add it to the array
 		if(locationArray.indexOf(input) > 0)
 		{
 			console.log("Location has already been added!");
 		}
 
+		// Change page
 		console.log(locationArray);
 		window.location = 'index.html#currentLocation';
 		console.log(state);
@@ -316,6 +319,7 @@ $('.CurrentLocTitle').on('click', function(event){
 
 $(document).on('pageshow', '#locations', function()
 {
+	// Check if we have already seen the tutorial or not
 	if(localStorage.getItem("tutorialState") == 1)
 	{
 		console.log("SHOWED PAGE");
@@ -327,6 +331,7 @@ $(document).on('pageshow', '#locations', function()
 		console.log(locationArray);
 	}
 
+	// Fade in added locations if they exist
 	if(locationArray[0] != "" && locationArray.length >= 1)
 	{
 		$('#loc1').html(locationArray[0]);
@@ -348,6 +353,7 @@ $(document).on('pageshow', '#locations', function()
 		$('#loc4').fadeIn('slow');
 	}
 
+	// Handle click events for added locations
 	$('#loc1').on('click', function(event) {
 		input = locationArray[0];
 		state = 2;
@@ -370,6 +376,7 @@ $(document).on('pageshow', '#locations', function()
 	});
 });
 
+// Clear page data by hiding divs
 function clearPageData()
 {
 	$('.current-temp').html("Loading!");
@@ -394,6 +401,7 @@ function clearPageData()
 	$('.back-button').hide();
 }
 
+// Load data in from local storage
 function loadData()
 {
 	var savedLocations;
@@ -415,11 +423,13 @@ function loadData()
 	}
 }
 
+// Save locations to local storage
 function saveData()
 {
 	localStorage.setItem("locations", JSON.stringify(locationArray));
 }
 
+// Create a GET request to the weather API using the city name
 function getWeatherViaCity()
 {
 	console.log("Getting weather via city name");
@@ -448,11 +458,10 @@ function getWeatherViaCity()
 			$('.today').fadeIn('slow');
 			$('.refresh').fadeIn('slow');
 			$('.back-button').fadeIn('slow');
-			//$('.community-ratings').fadeIn('slow');
-
 		}
 	});
 
+	// Also send a request to get the next 3 days
 	$.ajax({
 		url: 'https://api.apixu.com/v1/forecast.json?key=b3818c2db71747f78d2185718181403&q=' + input + '&days=4',
 		type: 'get',
@@ -485,12 +494,14 @@ function getWeatherViaCity()
 	});
 }
 
+// Get location name
 function getName(index)
 {
 	var locationName = locationArray[index];
 	return locationName;
 }
 
+// Get weather data from current location via lat and long coordinates of the device
 function getWeather()
 {
 	var lat = 0;
@@ -563,42 +574,7 @@ function getWeather()
 	});
 }
 
-function getUserData()
-{
-	$.ajax({
-		url: 'https://secret-meadow-93624.herokuapp.com/ratings',
-		type: 'GET',
-		async: 'true',
-		dataType: 'json',
-		success: function(result) {
-			for(var i = 0; i < result.length; i++)
-			{
-				console.log("JSON Count: " + i);
-				if(result[i].location == currentLocationName)
-				{
-					console.log("Got the right location!");
-				}
-				else if(result[i].location != currentLocationName)
-				{
-					console.log("Location not found in Custom API");
-					$('.community-ratings').hide();
-					noReportAvailable();
-				}
-			}
-
-			ratingLocation = result[0].location;
-			console.log("CUSTOM API LOCATION: " + ratingLocation);
-			yesRatings = result[0].yes;
-			noRatings = result[0].no;
-
-			if(ratingLocation == input)
-			{
-				isAddedLocation = true;
-			}
-		}
-	});
-}
-
+// Send a GET request to my custom API to get community ratings if available
 function getUserAnswer()
 {
 	$.ajax({
@@ -609,10 +585,9 @@ function getUserAnswer()
 		success: function(result) {
 			console.log("Location to check for ratings: " + currentLocationName);
 
+			// Loop through the API data for the correct data based on the location in question.
 			for(var i = 0; i < result.length; i++)
 			{
-				// console.log("JSON Count: " + i);
-				// console.log(currentLocationName);
 				if(result[i].location == currentLocationName)
 				{
 					console.log("Got the right location!");
@@ -632,14 +607,7 @@ function getUserAnswer()
 
 					$('.community-ratings').fadeIn('slow');
 					noReportAvailable();
-					//$('community-ratings').fadeOut('fast');
 				}
-
-				// else if(result[i].location != currentLocationName)
-				// {
-				// 	console.log("Location not found in Custom API");
-				// 	$('.community-ratings').hide();
-				// }
 			}
 			if(setRating)
 			{
@@ -650,6 +618,7 @@ function getUserAnswer()
 	});
 }
 
+// Send a PUT request to my custom API to update with the user's answer via the location's ID
 function postUserAnswer(result)
 {
 	if(userResponse == 1)
@@ -686,6 +655,7 @@ function postUserAnswer(result)
 	}
 }
 
+// GET request to weather API to check it's name
 function getCurrentLocationName()
 {
 	$('.CurrentLocTitle').html("Getting Your Location...");
@@ -713,8 +683,7 @@ function getCurrentLocationName()
 	});
 }
 
-// Delete listeners start
-
+// Delete listeners start, taphold to delete added locations and update arrays
 $('#loc1').on("taphold", function(event){
 	var index = locationArray.indexOf($('#loc1').text());
 	console.log(index);
@@ -770,7 +739,6 @@ $('#loc4').on("taphold", function(event){
 	saveData();
 	console.log(locationArray);
 });
-
 // Delete listeners end
 
 function restoreBuffers()
@@ -781,6 +749,7 @@ function restoreBuffers()
 	$('.loc4-buffer').fadeIn('fast');
 }
 
+// Update UI with correct community ratings
 function updateCommunityRatings()
 {
 	$('.community-ratings').html( "Community Report<br>" + "Rain: " + yesRatings + " Dry: " + noRatings);
@@ -791,6 +760,7 @@ function noReportAvailable()
 	$('.community-ratings').html( "Community Report<br>" + "No Community Report Available");
 }
 
+// Display the weather data to the UI 
 function displayForecastedWeatherData(data)
 {
 	var days = data.forecast.forecastday;
@@ -829,31 +799,16 @@ function displayCurrentWeatherData(data)
 			$('.community-ratings').fadeIn('slow');
 
 		}
-		else if(hasResponded && state == 1 /* && data.location.name === ratingLocation */)
+		else if(hasResponded && state == 1)
 		{
 			console.log("Response has already been taken!");
-			// if(data.location.name.includes(ratingLocation))
-			// {
 				updateCommunityRatings();
 				$('.community-ratings').fadeIn('slow');
 				$(".popup").slideUp();
-			// }
 		}
-	// else{
-	// 	$('.community-ratings').fadeOut('slow');
-	// }
 }
 
-function displayData(data)
-{
-	$('.location-name').html(data.location.name);
-	$('.location-name-small').html(data.location.name);
-	$('.time-stamp').html("LAST UPDATED: " + data.current.last_updated);
-	$('.current-temp').html(data.current.temp_c + "C");
-	$('.current-cond').html(data.current.condition.text);
-	$('.feels-like').html("FEELS LIKE: " + data.current.feelslike_c + "C");
-}
-
+// Display the correct day of the week based on the weather data
 function FigureOutDayOfWeek(data, day)
 {
 	var days = data.forecast.forecastday;
@@ -866,6 +821,7 @@ function FigureOutDayOfWeek(data, day)
 	return weekDays[newDate.getDay()];
 }
 
+// Display correct weather icon based of weather conditions
 function FigureOutIconType(data, day)
 {
 	if(day != 0)
