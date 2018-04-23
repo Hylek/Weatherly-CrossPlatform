@@ -35,46 +35,18 @@ $(document).ready(function()
 	innit();
 })
 
-var owl = $('.owl-carousel');
-
 function innit() {
 	document.addEventListener("online", onOnline, false);
 	document.addEventListener("offline", onOffline, false);
 
-
-	$('.CurrentLocTitle').hide();	
+// Hide all empty divs when we first load the app
+	$('.CurrentLocTitle').hide();
 	$('#loc1').hide();
 	$('#loc2').hide();
 	$('#loc3').hide();
 	$('#loc4').hide();
 	$('.popup').hide();
 	$('.community-ratings').hide();
-
-	checkTutorial();
-
-	//getUserAnswer();
-
-	if(locationArray == null)
-	{
-		locationArray = [];
-	}
-
-	userResponse = 0;
-	setRating = false;
-	hasResponded = false;
-	$(".owl-carousel").owlCarousel({
-			items: 1
-	});
-
-	if(window.navigator.onLine)
-	{
-		$('body').addClass('online');
-	}
-	else
-	{
-		$('body').addClass('offline');
-	}
-
 	$('.today').hide();
 	$('.current-location-name').hide();
 	$('.time-stamp').hide();
@@ -94,11 +66,36 @@ function innit() {
 	$('.day3').hide();
 	$('.back-button').hide();
 
+	// Check if the user has completed the tutorial
+	checkTutorial();
+
+	// Fix for weird bug where saved variable = null
+	if(locationArray == null)
+	{
+		locationArray = [];
+	}
+
+	// Set user response and ratings to default
+	userResponse = 0;
+	setRating = false;
+	hasResponded = false;
+
+	// Listen for if the device goes offline
+	if(window.navigator.onLine)
+	{
+		$('body').addClass('online');
+	}
+	else
+	{
+		$('body').addClass('offline');
+	}
+
+	// If tutorial state is 1 skip
 	if(localStorage.getItem("tutorialState") == 1)
 	{
 		getCurrentLocationName();
 	}
-
+// If we have saved locations, fill them into the list
 	if(locationArray[0] != "" && locationArray.length >= 1)
 	{
 		$('#loc1').html(locationArray[0]);
@@ -148,7 +145,7 @@ $(document).on('pageshow', '#tutorial-page-1', function()
 		$('.location-permission').hide();
 			$('.tutorial-title-1').html("Welcome to Weatherly");
 			$('.tutorial-content-1').html("Weatherly is a community weather app that uses you, the user, to provide more accurate information on current weather at your location.<br><br> When there is adverse weather conditions at your present location, weatherly will ask you in the app if that weather is actually affecting your location.<br><br> You will then be able to see other people's responses to this location and other responses in different locations that you have added.");
-			
+
 			$('#tutorialButton-1').on('click', function(){
 				console.log("Going to tutorial page 2!");
 				window.location = 'index.html#tutorial-page-2';
@@ -210,7 +207,7 @@ $(document).on('pageshow', '#addLocation', function()
 {
 	console.log("In Add Location!");
 
-	$('#addLocationButton').on("click", function(event){ 
+	$('#addLocationButton').on("click", function(event){
 		input = document.getElementById("locationSearch").value;
 		console.log("Input! " + input);
 		state = 2;
@@ -244,6 +241,7 @@ $(document).on('pageshow', '#currentLocation', function()
 {
 	console.log("locations page loaded");
 
+	// If state is 1 we are looking for current location, if state is 2 we are searching via city
 	if(state == 1)
 	{
 		getWeather();
@@ -253,12 +251,15 @@ $(document).on('pageshow', '#currentLocation', function()
 		getWeatherViaCity();
 	}
 
+	// Refresh the weather data if the refresh button is tapped
 	$('.refresh-button').on("click", function(event){
 		if(state == 1)
 		{
 			clearPageData();
 			getWeather();
+			console.log("Refresh current weather data!");
 		}
+		// If our state is 2, use the city name rather than coordinates
 		if(state == 2)
 		{
 			clearPageData();
@@ -266,11 +267,13 @@ $(document).on('pageshow', '#currentLocation', function()
 		}
 	});
 
+// Update community report on showing the location page
 	if(state == 1)
 	{
 		updateCommunityRatings();
 	}
 
+// Go back to the locations page if user presses back and have state = 0
 	$('.back-button').on("click", function(event){
 		$('.popup').slideUp();
 		window.location = 'index.html#locations';
@@ -278,10 +281,12 @@ $(document).on('pageshow', '#currentLocation', function()
 	});
 });
 
+// Take the user to add location page if they click on add location
 $('#addNewLocation').on("click", function(event){
 	window.location = 'index.html#addLocation';
 });
 
+// If the user says it is raining, send a GET request to my custom API server to get data and send a PUT request to update the data with the user's response
 $('.yes-button').on("click", function(event){
 	$('.popup').slideUp();
 	userResponse = 1;
@@ -289,6 +294,7 @@ $('.yes-button').on("click", function(event){
 	getUserAnswer();
 });
 
+// If the user says isn't is raining, send a GET request to my custom API server to get data and send a PUT request to update the data with the user's response
 $('.no-button').on("click", function(event){
 	$('.popup').slideUp();
 	userResponse = 2;
@@ -296,25 +302,12 @@ $('.no-button').on("click", function(event){
 	getUserAnswer();
 });
 
-$('#snow-button').on("click", function(event){
-	$('.popup').slideUp();
-	userResponse = 3;
-	setRating = true;
-	getUserAnswer();
-});
-
-$('#clear-button').on("click", function(event){
-	$('.popup').slideUp();
-	userResponse = 4;
-	setRating = true;
-	getUserAnswer();
-});
-
+// If the user clicks on the current location item in the locations menu, set state to 1 and go to the page using lat and long
 $('.currentLocationItem').on('click', function(event){
 	window.location = 'index.html#currentLocation';
 	state = 1;
 });
-
+// If the user clicks on the current location item in the locations menu, set state to 1 and go to the page using lat and long
 $('.CurrentLocTitle').on('click', function(event){
 	state = 1;
 	window.location = 'index.html#currentLocation';
@@ -327,9 +320,9 @@ $(document).on('pageshow', '#locations', function()
 		console.log("SHOWED PAGE");
 		clearPageData();
 		getCurrentLocationName();
-	
+
 		loadData();
-	
+
 		console.log(locationArray);
 	}
 
@@ -456,7 +449,7 @@ function getWeatherViaCity()
 			$('.back-button').fadeIn('slow');
 			//$('.community-ratings').fadeIn('slow');
 
-		}	
+		}
 	});
 
 	$.ajax({
@@ -520,10 +513,10 @@ function getWeather()
 			},
 			success: function(result) {
 				currentLocationName = result.location.name;
-				console.log("Got current location's weather data!");
+				console.log("Got current location's weather data! " + currentLocationName);
 				displayCurrentWeatherData(result);
 				getUserAnswer();
-				
+
 				$('.current-location-name').fadeIn('slow');
 				$('.time-stamp').fadeIn('slow');
 				$('.current-temp').fadeIn('slow');
@@ -614,6 +607,7 @@ function getUserAnswer()
 		dataType: 'json',
 		success: function(result) {
 			console.log("Location to check for ratings: " + currentLocationName);
+
 			for(var i = 0; i < result.length; i++)
 			{
 				// console.log("JSON Count: " + i);
@@ -630,8 +624,9 @@ function getUserAnswer()
 
 					$('.community-ratings').fadeIn('slow');
 					updateCommunityRatings();
+					break;
 				}
-				else{
+				else if(result[i].location != currentLocationName){
 					console.log("Didn't find anything!");
 
 					$('.community-ratings').fadeIn('slow');
@@ -679,7 +674,7 @@ function postUserAnswer(result)
 			type: 'PUT',
 			async: 'true',
 			data: {
-				location: ratingLocation, 
+				location: ratingLocation,
 				yes: yesRatings,
 				no: noRatings = ++noRatings
 			}
@@ -785,14 +780,14 @@ function restoreBuffers()
 	$('.loc4-buffer').fadeIn('fast');
 }
 
-function updateCommunityRatings() 
+function updateCommunityRatings()
 {
-	$('.community-ratings').html( "Community Report<br>" + "Rain: " + yesRatings + " Dry: " + noRatings);	
+	$('.community-ratings').html( "Community Report<br>" + "Rain: " + yesRatings + " Dry: " + noRatings);
 }
 
 function noReportAvailable()
 {
-	$('.community-ratings').html( "Community Report<br>" + "No Community Report Available");	
+	$('.community-ratings').html( "Community Report<br>" + "No Community Report Available");
 }
 
 function displayForecastedWeatherData(data)
@@ -840,6 +835,7 @@ function displayCurrentWeatherData(data)
 			// {
 				updateCommunityRatings();
 				$('.community-ratings').fadeIn('slow');
+				$(".popup").slideUp();
 			// }
 		}
 	// else{
@@ -863,7 +859,8 @@ function FigureOutDayOfWeek(data, day)
 	var weekDays = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
 
 	var date = days[day].date
-	var formattedDate = date.replace("-", ",").replace("-", ",");
+	//var formattedDate = date.replace("-", ",").replace("-", ",");
+	var formattedDate = date.replace(" ", "T");
 	var newDate = new Date(formattedDate);
 	return weekDays[newDate.getDay()];
 }
@@ -874,7 +871,7 @@ function FigureOutIconType(data, day)
 	{
 		var days = data.forecast.forecastday;
 		var weather = days[day].day.condition.text;
-	
+
 		if(weather.includes("rain") || weather.includes("drizzle"))
 		{
 			return "S";
